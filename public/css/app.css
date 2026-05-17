@@ -631,3 +631,182 @@ body {
     margin-top: 1rem;
 }
 
+
+/* Landing Page Navbar Refinements */
+.landing-page .nav-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(15px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    padding: 0.8rem 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.landing-page .logo-area {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.landing-page .logo-area img {
+    width: 50px;
+}
+
+.landing-page .logo-area .text-info {
+    line-height: 1.1;
+}
+
+.landing-page .logo-area h1 {
+    font-size: 1.1rem;
+    color: #061a3d;
+    margin: 0;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+}
+
+.landing-page .logo-area p {
+    font-size: 0.65rem;
+    color: #0047ab;
+    margin: 0;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.landing-page .nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.landing-page .nav-links a {
+    color: #4a5568;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: var(--transition);
+}
+
+.landing-page .nav-links a:hover {
+    color: #0047ab;
+}
+
+.landing-page .nav-auth-btns {
+    display: flex;
+    gap: 12px;
+}
+
+.landing-page .btn-login {
+    padding: 0.6rem 1.5rem;
+    border: 1px solid #0047ab;
+    color: #0047ab;
+    border-radius: 10px;
+    font-weight: 700;
+    text-decoration: none;
+    font-size: 0.85rem;
+}
+
+.landing-page .btn-register {
+    padding: 0.6rem 1.5rem;
+    background: #0047ab;
+    color: white;
+    border-radius: 10px;
+    font-weight: 700;
+    text-decoration: none;
+    font-size: 0.85rem;
+}
+
+
+/* Thin & Concise Landing Navbar */
+.landing-page .landing-nav {
+    padding: 0.5rem 10% !important;
+    height: 70px !important; /* Fixed height for consistency */
+    display: flex;
+    align-items: center;
+}
+
+.landing-page .auth-brand img {
+    width: 35px !important; /* Smaller logo */
+    margin-bottom: 0 !important;
+}
+
+.landing-page .auth-brand h1 {
+    font-size: 1rem !important;
+}
+
+.landing-page .landing-nav-links {
+    gap: 1.5rem !important;
+}
+
+.landing-page .landing-nav-links a {
+    font-size: 0.85rem !important;
+}
+
+.landing-page .landing-nav div a {
+    padding: 0.5rem 1.5rem !important;
+    font-size: 0.85rem !important;
+}
+
+
+/* Premium CTA Buttons Fix */
+.landing-page .section div div a {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 1.2rem 2.5rem !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    white-space: nowrap;
+}
+
+.landing-page .section div div a:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+}
+
+.landing-page .section div div a i {
+    font-size: 0.9rem;
+    transition: transform 0.3s ease;
+}
+
+.landing-page .section div div a:hover i {
+    transform: translateX(5px);
+}
+
+
+/* Cool Watermark Logo for Auth Sidebar */
+.auth-side-panel {
+    position: relative;
+    overflow: hidden;
+}
+
+.auth-side-panel::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-15deg);
+    width: 120%;
+    height: 120%;
+    background-image: url("../images/logo.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 60%;
+    opacity: 0.04;
+    filter: blur(5px);
+    z-index: 0;
+    pointer-events: none;
+}
+
+.auth-side-content {
+    position: relative;
+    z-index: 1;
+}
+

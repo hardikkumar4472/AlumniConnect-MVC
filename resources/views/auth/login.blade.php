@@ -11,15 +11,17 @@
 <body style="margin:0;">
     <div class="auth-page">
         <div class="auth-side-panel">
-            <div class="auth-brand">
-                <img src="{{ asset('images/logo.png') }}" alt="Logo">
-                <h1>GEC ALUMNI</h1>
-                <p style="color: var(--accent); font-weight: 600; letter-spacing: 1px;">ASSOCIATION PLATFORM</p>
-            </div>
-            
-            <div style="margin-top: 4rem;">
-                <h3 style="font-size: 1.5rem; margin-bottom: 1rem;">Reconnect with Excellence</h3>
-                <p style="opacity: 0.8; line-height: 1.6;">Access your personalized portal to connect with mentors, explore opportunities, and contribute to the GEC legacy.</p>
+            <div class="auth-side-content">
+                <div class="auth-brand">
+                    <img src="{{ asset('images/logo.png') }}" alt="Logo">
+                    <h1>GEC ALUMNI</h1>
+                    <p style="color: var(--accent); font-weight: 600; letter-spacing: 1px;">ASSOCIATION PLATFORM</p>
+                </div>
+                
+                <div style="margin-top: 4rem;">
+                    <h3 style="font-size: 1.5rem; margin-bottom: 1rem;">Reconnect with Excellence</h3>
+                    <p style="opacity: 0.8; line-height: 1.6;">Access your personalized portal to connect with mentors, explore opportunities, and contribute to the GEC legacy.</p>
+                </div>
             </div>
         </div>
 

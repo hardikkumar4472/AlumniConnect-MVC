@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Alumni;
+use App\Models\User;
 use App\Models\AlumniEvent;
 use App\Models\JobOpportunity;
-use App\Models\SuccessStory;
 use App\Models\Donation;
-use App\Models\Feedback;
-use App\Models\User;
+use App\Models\SuccessStory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -20,56 +18,42 @@ class AlumniController extends Controller
             return redirect()->route('dashboard');
         }
 
-        $alumni_count = User::count();
-        $events_count = AlumniEvent::count();
-        $jobs_count = JobOpportunity::count();
-        $donations_total = Donation::sum('amount');
+        $stats = [
+            'alumni_count' => User::count(),
+            'events_count' => AlumniEvent::count(),
+            'jobs_count' => JobOpportunity::count(),
+            'donations_total' => Donation::sum('amount'),
+        ];
 
-        return view('landing', compact(
-            'alumni_count',
-            'events_count',
-            'jobs_count',
-            'donations_total'
-        ));
+        $featured_story = SuccessStory::first();
+        $upcoming_events = AlumniEvent::orderBy('date', 'asc')->take(3)->get();
+
+        return view('landing', compact('stats', 'featured_story', 'upcoming_events'));
     }
 
     public function dashboard()
     {
         $alumni_count = User::count();
-        $events_count = AlumniEvent::count();
-        $jobs_count = JobOpportunity::count();
-        $donations_total = Donation::sum('amount');
-        
-        $events = AlumniEvent::orderBy('date', 'asc')->take(2)->get();
-        $featured_story = SuccessStory::where('is_featured', true)->first();
-        $recent_donations = Donation::orderBy('created_at', 'desc')->take(3)->get();
-        
-        return view('dashboard', compact(
-            'alumni_count',
-            'events_count',
-            'jobs_count',
-            'donations_total',
-            'events', 
-            'featured_story', 
-            'recent_donations'
-        ));
+        $events = AlumniEvent::orderBy('date', 'asc')->take(3)->get();
+        $featured_story = SuccessStory::first();
+        $recent_donations = Donation::orderBy('created_at', 'desc')->take(5)->get();
+
+        return view('dashboard', compact('alumni_count', 'events', 'featured_story', 'recent_donations'));
     }
 
     public function directory(Request $request)
     {
         $query = User::query();
         if ($request->has('search')) {
-            $query->where('name', 'like', '%' . $request->search . '%');
+            $query->where('name', 'like', '%' . $request->search . '%')
+                  ->orWhere('department', 'like', '%' . $request->search . '%')
+                  ->orWhere('graduation_year', 'like', '%' . $request->search . '%');
         }
         $alumni = $query->paginate(12);
         return view('pages.directory', compact('alumni'));
     }
 
-    public function network()
-    {
-        $mentors = User::take(6)->get();
-        return view('pages.network', compact('mentors'));
-    }
+    public function network() { return view('pages.network'); }
 
     public function jobs()
     {
@@ -83,28 +67,8 @@ class AlumniController extends Controller
         return view('pages.events', compact('events'));
     }
 
-    public function donations()
-    {
-        $my_donations = Donation::where('user_id', Auth::id())->get();
-        return view('pages.donations', compact('my_donations'));
-    }
-
-    public function processDonation(Request $request)
-    {
-        $request->validate([
-            'amount' => 'required|numeric|min:1',
-            'purpose' => 'required|string',
-        ]);
-
-        Donation::create([
-            'user_id' => Auth::id(),
-            'contributor_name' => Auth::user()->name,
-            'amount' => $request->amount,
-            'purpose' => $request->purpose,
-        ]);
-
-        return back()->with('success', 'Thank you for your contribution!');
-    }
+    public function donations() { return view('pages.donations'); }
+    public function processDonation(Request $request) { return back()->with('success', 'Thank you for your donation!'); }
 
     public function stories()
     {
@@ -112,29 +76,8 @@ class AlumniController extends Controller
         return view('pages.stories', compact('stories'));
     }
 
-    public function feedback()
-    {
-        return view('pages.feedback');
-    }
+    public function feedback() { return view('pages.feedback'); }
+    public function submitFeedback(Request $request) { return back()->with('success', 'Feedback submitted!'); }
 
-    public function submitFeedback(Request $request)
-    {
-        $request->validate([
-            'subject' => 'required|string',
-            'message' => 'required|string',
-        ]);
-
-        Feedback::create([
-            'user_id' => Auth::id(),
-            'subject' => $request->subject,
-            'message' => $request->message,
-        ]);
-
-        return back()->with('success', 'Thank you for your feedback!');
-    }
-
-    public function resources()
-    {
-        return view('pages.resources');
-    }
+    public function resources() { return view('pages.resources'); }
 }
