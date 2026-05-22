@@ -40,12 +40,7 @@
                 <i class="fa-solid fa-calendar-days"></i>
                 <span>Events & Reunions</span>
             </a>
-            @if(Auth::user()->role == 'alumni')
-            <a href="{{ route('donations') }}" class="nav-item {{ request()->routeIs('donations') ? 'active' : '' }}">
-                <i class="fa-solid fa-hand-holding-heart"></i>
-                <span>Donations & Impact</span>
-            </a>
-            @endif
+
 
             <a href="{{ route('stories') }}" class="nav-item {{ request()->routeIs('stories') ? 'active' : '' }}">
                 <i class="fa-solid fa-star"></i>
@@ -85,6 +80,10 @@
                 <i class="fa-solid fa-calendar-check"></i>
                 <span>Manage Events</span>
             </a>
+            <a href="{{ route('admin.news') }}" class="nav-item {{ request()->routeIs('admin.news') ? 'active' : '' }}" style="padding-left: 2rem; font-size: 0.8rem;">
+                <i class="fa-solid fa-newspaper"></i>
+                <span>Manage News</span>
+            </a>
             <a href="{{ route('admin.feedback') }}" class="nav-item {{ request()->routeIs('admin.feedback') ? 'active' : '' }}" style="padding-left: 2rem; font-size: 0.8rem;">
                 <i class="fa-solid fa-message"></i>
                 <span>View Feedback</span>
@@ -92,6 +91,9 @@
             @endif
         </nav>
     </aside>
+
+    <!-- Sidebar Mobile Overlay -->
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
 
     <main class="main-content" id="main-content">
         <header class="main-header">
@@ -127,59 +129,9 @@
             </div>
         </header>
 
-        <div class="content-body" style="min-height: 80vh; padding: 2rem 0;">
+        <div class="content-body" style="min-height: 80vh; padding: 2rem;">
             @yield('content')
         </div>
-
-        <footer class="footer" style="margin-left: 0; padding: 4rem 0;">
-            <div class="footer-main">
-                <div class="footer-col">
-                    <div class="logo-container" style="margin-bottom: 1.5rem;">
-                        <img src="{{ asset('images/logo.png') }}" alt="Logo" style="width: 40px;">
-                        <div class="logo-text">
-                            <h1 style="font-size: 1rem; color: #061a3d;">GEC ALUMNI</h1>
-                            <p style="font-size: 0.6rem; color: #718096;">ASSOCIATION PLATFORM</p>
-                        </div>
-                    </div>
-                    <p style="color: #a0aec0; font-size: 0.85rem; line-height: 1.6;">
-                        Uniting graduates, fostering meaningful connections and empowering each other to build a better future together.
-                    </p>
-                </div>
-
-                <div class="footer-col">
-                    <h4>Explore</h4>
-                    <ul class="footer-links">
-                        <li><a href="{{ route('dashboard') }}">Home</a></li>
-                        <li><a href="{{ route('directory') }}">Directory</a></li>
-                        <li><a href="{{ route('jobs') }}">Jobs</a></li>
-                        <li><a href="{{ route('events') }}">Events</a></li>
-                    </ul>
-                </div>
-
-                <div class="footer-col">
-                    <h4>Support</h4>
-                    <ul class="footer-links">
-                        <li><a href="#">Help Center</a></li>
-                        <li><a href="#">Privacy Policy</a></li>
-                        <li><a href="#">Terms</a></li>
-                        <li><a href="{{ route('feedback') }}">Feedback</a></li>
-                    </ul>
-                </div>
-
-                <div class="footer-col">
-                    <h4>Get in Touch</h4>
-                    <p style="font-size: 0.85rem; color: #a0aec0; margin-bottom: 1rem;">alumni@gec.edu.in</p>
-                    <div style="display: flex; gap: 15px;">
-                        <a href="#" style="color: #a0aec0;"><i class="fa-brands fa-facebook"></i></a>
-                        <a href="#" style="color: #a0aec0;"><i class="fa-brands fa-linkedin"></i></a>
-                        <a href="#" style="color: #a0aec0;"><i class="fa-brands fa-instagram"></i></a>
-                    </div>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>© {{ date('Y') }} GEC Alumni Association. All rights reserved.</p>
-            </div>
-        </footer>
     </main>
 
     @yield('scripts')
@@ -187,10 +139,36 @@
         const sidebarToggle = document.getElementById('sidebar-toggle');
         const sidebar = document.querySelector('.sidebar');
         const mainContent = document.getElementById('main-content');
+        const sidebarOverlay = document.getElementById('sidebar-overlay');
 
-        sidebarToggle.addEventListener('click', () => {
-            sidebar.classList.toggle('collapsed');
-            mainContent.classList.toggle('expanded');
+        function toggleSidebar() {
+            if (window.innerWidth <= 768) {
+                // Mobile behavior
+                sidebar.classList.toggle('mobile-open');
+                sidebarOverlay.classList.toggle('active');
+            } else {
+                // Desktop behavior
+                sidebar.classList.toggle('collapsed');
+                mainContent.classList.toggle('expanded');
+            }
+        }
+
+        sidebarToggle.addEventListener('click', toggleSidebar);
+
+        // Close sidebar when clicking overlay on mobile
+        sidebarOverlay.addEventListener('click', () => {
+            if (window.innerWidth <= 768) {
+                sidebar.classList.remove('mobile-open');
+                sidebarOverlay.classList.remove('active');
+            }
+        });
+
+        // Handle window resize gracefully
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 768) {
+                sidebar.classList.remove('mobile-open');
+                sidebarOverlay.classList.remove('active');
+            }
         });
     </script>
 </body>

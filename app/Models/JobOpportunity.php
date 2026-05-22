@@ -15,5 +15,16 @@ class JobOpportunity extends Model
         'description',
         'link',
         'type',
+        'posted_by'
     ];
+
+    public function poster()
+    {
+        return $this->belongsTo(User::class, 'posted_by');
+    }
+
+    public function applications()
+    {
+        return $this->hasMany(JobApplication::class, 'job_id');
+    }
 }

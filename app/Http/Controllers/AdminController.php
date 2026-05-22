@@ -84,6 +84,13 @@ class AdminController extends Controller
         return back()->with('success', 'Event created successfully.');
     }
 
+    public function updateEvent(Request $request, $id)
+    {
+        $event = AlumniEvent::findOrFail($id);
+        $event->update($request->all());
+        return back()->with('success', 'Event updated successfully.');
+    }
+
     public function deleteEvent($id)
     {
         AlumniEvent::destroy($id);
@@ -103,6 +110,13 @@ class AdminController extends Controller
         return back()->with('success', 'Story added successfully.');
     }
 
+    public function updateStory(Request $request, $id)
+    {
+        $story = SuccessStory::findOrFail($id);
+        $story->update($request->all());
+        return back()->with('success', 'Story updated successfully.');
+    }
+
     public function deleteStory($id)
     {
         SuccessStory::destroy($id);
@@ -110,9 +124,74 @@ class AdminController extends Controller
     }
 
     // Feedback Management
+    // Campus News Management
+    public function news()
+    {
+        $news = \App\Models\CampusNews::orderBy('created_at', 'desc')->get();
+        return view('admin.news', compact('news'));
+    }
+
+    public function storeNews(Request $request)
+    {
+        $request->validate([
+            'title' => 'required|string',
+            'content' => 'required|string',
+            'date' => 'required|string',
+        ]);
+
+        \App\Models\CampusNews::create($request->all());
+        return back()->with('success', 'Campus News added successfully!');
+    }
+
+    public function updateNews(Request $request, $id)
+    {
+        $request->validate([
+            'title' => 'required|string',
+            'content' => 'required|string',
+            'date' => 'required|string',
+        ]);
+
+        $newsItem = \App\Models\CampusNews::findOrFail($id);
+        $newsItem->update($request->all());
+        return back()->with('success', 'Campus News updated successfully!');
+    }
+
+    public function deleteNews($id)
+    {
+        $newsItem = \App\Models\CampusNews::findOrFail($id);
+        $newsItem->delete();
+        return back()->with('success', 'Campus News deleted successfully!');
+    }
+
     public function feedback()
     {
-        $feedback = Feedback::orderBy('created_at', 'desc')->get();
-        return view('admin.feedback', compact('feedback'));
+        $feedbacks = \App\Models\Feedback::with('user')->orderBy('created_at', 'desc')->get();
+        return view('admin.feedback', compact('feedbacks'));
+    }
+
+    // Resource Management
+    public function resources()
+    {
+        $resources = \App\Models\Resource::orderBy('created_at', 'desc')->get();
+        return view('admin.resources', compact('resources'));
+    }
+
+    public function storeResource(Request $request)
+    {
+        \App\Models\Resource::create($request->all());
+        return back()->with('success', 'Resource added successfully.');
+    }
+
+    public function updateResource(Request $request, $id)
+    {
+        $resource = \App\Models\Resource::findOrFail($id);
+        $resource->update($request->all());
+        return back()->with('success', 'Resource updated successfully.');
+    }
+
+    public function deleteResource($id)
+    {
+        \App\Models\Resource::destroy($id);
+        return back()->with('success', 'Resource deleted.');
     }
 }

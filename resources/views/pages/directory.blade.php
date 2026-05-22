@@ -23,8 +23,17 @@
         <h3 style="font-size: 1.1rem; margin-bottom: 0.3rem;">{{ $person->name }}</h3>
         <p style="font-size: 0.85rem; color: #718096; margin-bottom: 1.5rem;">Batch of {{ $person->graduation_year ?? 'N/A' }} • {{ $person->department ?? 'Engineering' }}</p>
         <div style="display: flex; gap: 10px; justify-content: center;">
-            <a href="#" class="social-btn" style="padding: 0.5rem 1rem; font-size: 0.8rem;">Profile</a>
-            <a href="#" class="social-btn" style="padding: 0.5rem 1rem; font-size: 0.8rem; background: #0047ab; color: white; border: none;">Connect</a>
+            <a href="{{ route('profile', $person->id) }}" class="social-btn" style="padding: 0.5rem 1rem; font-size: 0.8rem;">Profile</a>
+            @if(in_array((string)$person->_id, $connected_user_ids))
+                <button disabled style="padding: 0.5rem 1rem; font-size: 0.8rem; background: #e2e8f0; color: #4a5568; border: none; border-radius: 8px; font-weight: 600;">Connected</button>
+            @elseif(in_array((string)$person->_id, $sent_request_ids))
+                <button disabled style="padding: 0.5rem 1rem; font-size: 0.8rem; background: #bee3f8; color: #2b6cb0; border: none; border-radius: 8px; font-weight: 600;">Pending</button>
+            @else
+                <form action="{{ route('connect.request', $person->_id) }}" method="POST" style="margin: 0;">
+                    @csrf
+                    <button type="submit" class="social-btn" style="padding: 0.5rem 1rem; font-size: 0.8rem; background: #0047ab; color: white; border: none; cursor: pointer;">Connect</button>
+                </form>
+            @endif
         </div>
     </div>
     @empty

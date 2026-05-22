@@ -28,7 +28,8 @@
                     <span style="font-size: 0.8rem; color: #a0aec0;">{{ $event->time }}</span>
                 </td>
                 <td style="padding: 1.5rem; color: #718096;">{{ $event->location }}</td>
-                <td style="padding: 1.5rem;">
+                <td style="padding: 1.5rem; display: flex; gap: 10px;">
+                    <button onclick="document.getElementById('editEventModal-{{ $event->id }}').style.display='flex'" style="background:none; border:none; color:#3182ce; cursor:pointer;"><i class="fa-solid fa-pen"></i></button>
                     <form action="{{ route('admin.events.delete', $event->id) }}" method="POST" onsubmit="return confirm('Delete this event?')">
                         @csrf
                         @method('DELETE')
@@ -36,6 +37,43 @@
                     </form>
                 </td>
             </tr>
+
+            <!-- Edit Modal -->
+            <div id="editEventModal-{{ $event->id }}" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:2000; align-items:center; justify-content:center;">
+                <div class="card" style="width: 500px; padding: 2rem;">
+                    <h3>Edit Event</h3>
+                    <form action="{{ route('admin.events.update', $event->id) }}" method="POST" style="margin-top: 1.5rem;">
+                        @csrf
+                        @method('PUT')
+                        <div class="form-group" style="margin-bottom: 1rem;">
+                            <label>Event Title</label>
+                            <input type="text" name="title" value="{{ $event->title }}" required style="width:100%; padding:0.8rem; border-radius:8px; border:1px solid #e2e8f0;">
+                        </div>
+                        <div style="display: flex; gap: 15px; margin-bottom: 1rem;">
+                            <div class="form-group" style="flex: 1;">
+                                <label>Day (Number)</label>
+                                <input type="text" name="date" value="{{ $event->date }}" required style="width:100%; padding:0.8rem; border-radius:8px; border:1px solid #e2e8f0;">
+                            </div>
+                            <div class="form-group" style="flex: 1;">
+                                <label>Month (Short)</label>
+                                <input type="text" name="month" value="{{ $event->month }}" required style="width:100%; padding:0.8rem; border-radius:8px; border:1px solid #e2e8f0;">
+                            </div>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 1rem;">
+                            <label>Location</label>
+                            <input type="text" name="location" value="{{ $event->location }}" required style="width:100%; padding:0.8rem; border-radius:8px; border:1px solid #e2e8f0;">
+                        </div>
+                        <div class="form-group" style="margin-bottom: 2rem;">
+                            <label>Time</label>
+                            <input type="text" name="time" value="{{ $event->time }}" required style="width:100%; padding:0.8rem; border-radius:8px; border:1px solid #e2e8f0;">
+                        </div>
+                        <div style="display: flex; gap: 10px;">
+                            <button type="submit" class="hero-btn" style="flex: 1;">Save Changes</button>
+                            <button type="button" onclick="document.getElementById('editEventModal-{{ $event->id }}').style.display='none'" class="social-btn" style="flex: 1; padding:0.8rem; border:1px solid #cbd5e0; border-radius:8px; background:white; cursor:pointer;">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
             @endforeach
         </tbody>
     </table>

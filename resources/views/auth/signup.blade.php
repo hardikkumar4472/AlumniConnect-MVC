@@ -67,6 +67,16 @@
                 <form action="{{ route('register') }}" method="POST">
                     @csrf
                     
+                    @if ($errors->any())
+                        <div style="background-color: #fee2e2; border: 1px solid #f87171; color: #b91c1c; padding: 10px; border-radius: 8px; margin-bottom: 15px;">
+                            <ul style="margin: 0; padding-left: 20px;">
+                                @foreach ($errors->all() as $error)
+                                    <li style="font-size: 0.85rem;">{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+
                     <p style="font-size: 0.85rem; font-weight: 600; margin-bottom: 10px; color: #4a5568;">Select your role:</p>
                     <div class="role-selector">
                         <label class="role-option">

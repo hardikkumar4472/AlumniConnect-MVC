@@ -10,15 +10,15 @@
     @forelse($stories as $story)
     <div class="card" style="padding: 2rem;">
         <div style="display: flex; gap: 1.5rem; align-items: flex-start; margin-bottom: 1.5rem;">
-            <img src="{{ asset('images/' . ($story->image ?? 'alumni2.png')) }}" alt="{{ $story->name }}" style="width: 80px; height: 80px; border-radius: 20px; object-fit: cover;">
+            <img src="{{ Str::startsWith($story->image, 'http') ? $story->image : asset('images/' . ($story->image ?? 'alumni2.png')) }}" alt="{{ $story->author }}" style="width: 80px; height: 80px; border-radius: 20px; object-fit: cover;">
             <div>
-                <h3 style="font-size: 1.2rem;">{{ $story->name }}</h3>
-                <p style="font-size: 0.85rem; color: #718096;">{{ $story->designation }}</p>
+                <h3 style="font-size: 1.2rem;">{{ $story->author }}</h3>
+                <p style="font-size: 0.85rem; color: #718096;">{{ $story->title }}</p>
             </div>
         </div>
         <div style="position: relative;">
             <p style="font-size: 0.95rem; line-height: 1.7; color: #4a5568; font-style: italic;">
-                "{{ $story->story }}"
+                "{{ $story->content }}"
             </p>
         </div>
     </div>

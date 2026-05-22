@@ -1,6 +1,17 @@
 @extends('layouts.app')
 
 @section('content')
+
+@if(isset($unread_messages_count) && $unread_messages_count > 0)
+<div style="background: #ebf8ff; border-left: 4px solid #3182ce; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+    <div style="display: flex; align-items: center; gap: 10px;">
+        <i class="fa-solid fa-envelope" style="color: #3182ce; font-size: 1.2rem;"></i>
+        <span style="color: #2b6cb0; font-weight: 600;">You have {{ $unread_messages_count }} unread message(s)!</span>
+    </div>
+    <a href="{{ route('network') }}" style="background: #3182ce; color: white; padding: 0.5rem 1rem; border-radius: 6px; text-decoration: none; font-size: 0.85rem; font-weight: 600; transition: background 0.2s;">Go to Networking Hub</a>
+</div>
+@endif
+
 <div class="hero">
     <div class="hero-text">
         <p style="color: var(--accent); font-weight: 600; margin-bottom: 0.5rem;">WELCOME BACK, {{ strtoupper(Auth::user()->name) }}! 👋</p>
@@ -56,14 +67,7 @@
         <a href="{{ route('jobs') }}" class="card-link" style="color: #dd6b20;">Explore Jobs <i class="fa-solid fa-chevron-right"></i></a>
     </div>
     
-    @if(Auth::user()->role == 'alumni')
-    <div class="card">
-        <div class="card-icon" style="background: #fff5f5; color: #e53e3e;"><i class="fa-solid fa-heart"></i></div>
-        <h3>Donate Now</h3>
-        <p>Support the growth of our alma mater.</p>
-        <a href="{{ route('donations') }}" class="card-link" style="color: #e53e3e;">Make a Donation <i class="fa-solid fa-chevron-right"></i></a>
-    </div>
-    @else
+    @if(Auth::user()->role == 'student')
     <div class="card">
         <div class="card-icon" style="background: #fff5f5; color: #e53e3e;"><i class="fa-solid fa-graduation-cap"></i></div>
         <h3>Scholarships</h3>
@@ -74,90 +78,92 @@
 </div>
 
 <div class="bottom-grid">
-    <section class="upcoming-events">
+    <section class="upcoming-events" style="min-width: 0; display: flex; flex-direction: column; height: 100%;">
         <div class="section-title">
-            <h3>Upcoming Events</h3>
-            <a href="{{ route('events') }}" class="view-all">View All</a>
+            <h3 style="font-size: 1.25rem; color: #0f172a; font-weight: 700;">Upcoming Events</h3>
+            <a href="{{ route('events') }}" class="view-all" style="color: #3b82f6; font-weight: 600;">View All</a>
         </div>
-        <div class="event-list">
-            @forelse($events as $event)
-            <div class="event-item">
-                <div class="event-date" style="{{ $loop->index > 0 ? 'background: #faf5ff; color: #805ad5;' : '' }}">
-                    <span>{{ strtoupper($event->month) }}</span>
-                    <span>{{ $event->date }}</span>
+        @if(count($events) > 0)
+        @php $event = $events[0]; @endphp
+        <div class="card event-item" style="flex: 1; padding: 1.5rem; border-radius: 16px; border: 1px solid #f1f5f9; background: white; display: flex; flex-direction: column; justify-content: center; height: 100%;">
+            <div class="story-header" style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.25rem;">
+                <div class="event-date" style="min-width: 50px; height: 50px; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #eff6ff; color: #3b82f6; flex-shrink: 0; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+                    <span style="font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; line-height: 1.1;">{{ substr($event->month, 0, 3) }}</span>
+                    <span style="font-size: 1.1rem; font-weight: 800; line-height: 1.1;">{{ $event->date }}</span>
                 </div>
-                <div class="event-info">
-                    <h4>{{ $event->title }}</h4>
-                    <p><i class="fa-solid fa-clock"></i> {{ $event->time }} | {{ $event->location }}</p>
-                </div>
-            </div>
-            @empty
-            <p>No upcoming events.</p>
-            @endforelse
-        </div>
-    </section>
-    
-    <section class="success-stories">
-        <div class="section-title">
-            <h3>Success Stories</h3>
-            <a href="{{ route('stories') }}" class="view-all">View All</a>
-        </div>
-        @if($featured_story)
-        <div class="success-story-card">
-            <div class="story-header">
-                <img src="{{ asset('images/' . ($featured_story->image ?? 'alumni2.png')) }}" alt="{{ $featured_story->name }}" class="story-avatar">
-                <div>
-                    <h4 style="font-size: 0.95rem;">{{ $featured_story->name }}</h4>
-                    <p style="font-size: 0.75rem; color: #718096;">{{ $featured_story->designation }}</p>
+                <div style="flex: 1;">
+                    <h4 style="font-size: 1rem; color: #1e293b; font-weight: 700; margin: 0; line-height: 1.4; margin-bottom: 0.25rem; word-break: break-word;">{{ $event->title }}</h4>
+                    <p style="font-size: 0.8rem; color: #64748b; margin: 0; font-weight: 500; line-height: 1.4;"><i class="fa-regular fa-clock" style="margin-right: 4px;"></i>{{ $event->time }}</p>
                 </div>
             </div>
-            <div class="story-content">
-                <p>{{ $featured_story->story }}</p>
-            </div>
-            <div style="display: flex; justify-content: center; gap: 5px; margin-top: 1.5rem;">
-                <span style="width: 8px; height: 8px; border-radius: 50%; background: var(--primary);"></span>
-                <span style="width: 8px; height: 8px; border-radius: 50%; background: #e2e8f0;"></span>
-                <span style="width: 8px; height: 8px; border-radius: 50%; background: #e2e8f0;"></span>
+            <div class="story-content" style="flex: 1;">
+                <p style="font-size: 0.95rem; color: #475569; line-height: 1.6; font-style: italic;"><i class="fa-solid fa-location-dot" style="margin-right: 4px; color: #3b82f6;"></i> {{ $event->location }}</p>
             </div>
         </div>
         @else
-        <p>No success stories featured.</p>
+        <div class="card" style="flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 2rem; text-align: center; color: #94a3b8; border-radius: 16px; border: 1px solid #f1f5f9; background: white; height: 100%;">
+            <i class="fa-regular fa-calendar-xmark" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+            <p>No upcoming events.</p>
+        </div>
         @endif
     </section>
     
-    @if(Auth::user()->role == 'alumni')
-    <section class="recent-contributions">
+    <section class="success-stories" style="min-width: 0; display: flex; flex-direction: column; height: 100%;">
         <div class="section-title">
-            <h3>Recent Contributions</h3>
-            <a href="{{ route('donations') }}" class="view-all">View All</a>
+            <h3 style="font-size: 1.25rem; color: #0f172a; font-weight: 700;">Success Stories</h3>
+            <a href="{{ route('stories') }}" class="view-all" style="color: #3b82f6; font-weight: 600;">View All</a>
         </div>
-        <div class="contribution-list">
-            @forelse($recent_donations as $donation)
-            <div class="contribution-item">
-                <div class="contributor">
-                    <img src="{{ $donation->image ?? 'https://ui-avatars.com/api/?name=' . urlencode($donation->contributor_name) . '&background=random' }}" alt="{{ $donation->contributor_name }}">
-                    <div class="contributor-info">
-                        <h5>{{ $donation->contributor_name }}</h5>
-                        <p>{{ $donation->purpose }}</p>
-                    </div>
+        @if($featured_story)
+        <div class="card success-story-card" style="flex: 1; padding: 1.5rem; border-radius: 16px; border: 1px solid #f1f5f9; background: white; display: flex; flex-direction: column; justify-content: center; height: 100%;">
+            <div class="story-header" style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.25rem;">
+                <img src="https://ui-avatars.com/api/?name={{ urlencode($featured_story->author) }}&background=random&size=64" alt="{{ $featured_story->author }}" class="story-avatar" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover; box-shadow: 0 4px 6px rgba(0,0,0,0.05); flex-shrink: 0;">
+                <div style="flex: 1;">
+                    <h4 style="font-size: 1rem; color: #1e293b; font-weight: 700; margin: 0; line-height: 1.4; margin-bottom: 0.25rem; word-break: break-word;">{{ $featured_story->author }}</h4>
+                    <p style="font-size: 0.8rem; color: #64748b; margin: 0; font-weight: 500; line-height: 1.4;">{{ $featured_story->title }}</p>
                 </div>
-                <span class="amount">₹{{ number_format($donation->amount) }}</span>
             </div>
-            @empty
-            <p>No recent contributions.</p>
-            @endforelse
+            <div class="story-content" style="flex: 1;">
+                <p style="font-size: 0.95rem; color: #475569; line-height: 1.6; font-style: italic;">"{{ $featured_story->content }}"</p>
+            </div>
         </div>
+        @else
+        <div class="card" style="flex: 1; display: flex; align-items: center; justify-content: center; padding: 2rem; text-align: center; color: #94a3b8; border-radius: 16px; border: 1px solid #f1f5f9; background: white; height: 100%;">
+            <p>No success stories featured.</p>
+        </div>
+        @endif
     </section>
-    @else
-    <section class="student-news">
+    
+    @if(Auth::user()->role == 'student')
+    <section class="student-news" style="min-width: 0; display: flex; flex-direction: column; height: 100%;">
         <div class="section-title">
-            <h3>Campus News</h3>
-            <a href="#" class="view-all">View All</a>
+            <h3 style="font-size: 1.25rem; color: #0f172a; font-weight: 700;">Campus News</h3>
         </div>
-        <div class="card" style="padding: 1rem;">
-            <p style="font-size: 0.9rem; color: #4a5568;">Stay tuned for the upcoming annual technical fest and placement drive updates!</p>
+        @if(count($campus_news) > 0)
+        @php $news = $campus_news[0]; @endphp
+        <div class="card" style="flex: 1; padding: 1.5rem; border-radius: 16px; border: 1px solid #f1f5f9; background: white; display: flex; flex-direction: column; justify-content: center; position: relative; overflow: hidden; height: 100%;">
+            <div style="position: absolute; top: 0; right: 0; padding: 0.4rem 0.8rem; background: #fffbeb; color: #d97706; font-size: 0.65rem; font-weight: 700; border-bottom-left-radius: 8px; z-index: 10;">NEW</div>
+            <div class="story-header" style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.25rem;">
+                <div class="news-icon" style="min-width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #fffbeb; color: #f59e0b; flex-shrink: 0; box-shadow: 0 4px 6px rgba(0,0,0,0.05); font-size: 1.2rem;">
+                    <i class="fa-solid fa-newspaper"></i>
+                </div>
+                <div style="flex: 1; padding-right: 2.5rem;">
+                    <h4 style="font-size: 1rem; color: #1e293b; font-weight: 700; margin: 0; line-height: 1.4; margin-bottom: 0.25rem; word-break: break-word;">{{ $news->title }}</h4>
+                    <p style="font-size: 0.8rem; color: #64748b; margin: 0; font-weight: 500; line-height: 1.4;"><i class="fa-regular fa-calendar" style="margin-right: 4px;"></i>{{ $news->date }}</p>
+                </div>
+            </div>
+            <div class="story-content" style="flex: 1;">
+                <p style="font-size: 0.95rem; color: #475569; line-height: 1.6; font-style: italic;">"{{ $news->content }}"</p>
+            </div>
         </div>
+        @else
+        <div class="card" style="flex: 1; display: flex; align-items: center; justify-content: center; padding: 2rem; text-align: center; color: #94a3b8; border-radius: 16px; border: 1px solid #f1f5f9; background: white; height: 100%;">
+            <p>No campus news available.</p>
+        </div>
+        @endif
     </section>
     @endif
 </div>
+@endsection
+
+@section('scripts')
 @endsection

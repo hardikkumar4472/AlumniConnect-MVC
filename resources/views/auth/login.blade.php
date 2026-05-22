@@ -32,6 +32,17 @@
 
                 <form action="{{ route('login') }}" method="POST">
                     @csrf
+                    
+                    @if ($errors->any())
+                        <div style="background-color: #fee2e2; border: 1px solid #f87171; color: #b91c1c; padding: 10px; border-radius: 8px; margin-bottom: 15px;">
+                            <ul style="margin: 0; padding-left: 20px;">
+                                @foreach ($errors->all() as $error)
+                                    <li style="font-size: 0.85rem;">{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+
                     <div class="form-group" style="position: relative; margin-bottom: 1.5rem;">
                         <label style="display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 8px; color: #4a5568;">Email Address</label>
                         <i class="fa-solid fa-envelope" style="position: absolute; left: 1.2rem; top: 2.8rem; color: #a0aec0;"></i>
