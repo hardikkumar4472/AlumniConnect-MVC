@@ -19,8 +19,8 @@ class ContentSeeder extends Seeder
         SuccessStory::truncate();
         Resource::truncate();
 
-        // Generate 35 Events
-        for ($i = 0; $i < 35; $i++) {
+        // Generate 50 Events
+        for ($i = 0; $i < 50; $i++) {
             $date = $faker->dateTimeBetween('now', '+1 year');
             AlumniEvent::create([
                 'title' => $faker->catchPhrase . ' Summit',
@@ -46,7 +46,7 @@ class ContentSeeder extends Seeder
             'Pivoting My Career in My 30s'
         ];
 
-        for ($i = 0; $i < 35; $i++) {
+        for ($i = 0; $i < 50; $i++) {
             $name = $faker->name;
             SuccessStory::create([
                 'title' => $faker->randomElement($storyTopics) . ' - ' . $faker->company,
@@ -71,7 +71,7 @@ class ContentSeeder extends Seeder
             'Remote Work Productivity Video'
         ];
 
-        for ($i = 0; $i < 35; $i++) {
+        for ($i = 0; $i < 50; $i++) {
             \App\Models\Resource::create([
                 'title' => $faker->randomElement($resourceTitles) . ' ' . $faker->year,
                 'type' => $faker->randomElement($types),

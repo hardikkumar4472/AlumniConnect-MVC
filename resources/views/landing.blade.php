@@ -12,6 +12,259 @@
         .hero-btn { border-radius: 8px !important; }
         .feature-card h3 { font-size: 1.1rem; margin-bottom: 0.5rem; }
         .feature-card p { font-size: 0.85rem; color: #718096; line-height: 1.5; }
+
+        /* Responsive Layout Overrides */
+        .landing-hero {
+            background: linear-gradient(rgba(6, 26, 61, 0.85), rgba(6, 26, 61, 0.85)), url('{{ asset('images/campus.png') }}') !important;
+            background-size: cover !important;
+            background-position: center !important;
+            padding: 160px 10% 100px !important;
+        }
+        .hero-container {
+            display: flex;
+            gap: 50px;
+            align-items: center;
+        }
+        .landing-hero-content {
+            flex: 1.2;
+        }
+        .hero-title {
+            font-size: 3.5rem;
+            color: white;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+        .hero-subtitle {
+            color: #cbd5e0;
+            line-height: 1.7;
+            margin-bottom: 2.5rem;
+            font-size: 1.1rem;
+        }
+        .hero-btns {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 4rem;
+        }
+        .hero-quote-wrapper {
+            flex: 0.8;
+            width: 100%;
+        }
+        .quote-card {
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px);
+            padding: 3rem;
+            border-radius: 24px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* Success Story Section */
+        .story-section {
+            background: #f8fafc;
+            padding: 100px 10%;
+        }
+        .story-container {
+            display: flex;
+            gap: 80px;
+            align-items: center;
+        }
+        .story-img-wrapper {
+            flex: 1;
+            width: 100%;
+        }
+        .story-content-wrapper {
+            flex: 1.2;
+            width: 100%;
+        }
+
+        /* Upcoming Reunions Section */
+        .reunions-section {
+            padding: 100px 10%;
+        }
+        .reunions-header {
+            text-align: center;
+            margin-bottom: 5rem;
+        }
+        .reunions-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 0 10% 100px;
+        }
+        .cta-card {
+            background: #061a3d;
+            border-radius: 32px;
+            padding: 6rem;
+            text-align: center;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .cta-title {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+        }
+        .cta-text {
+            font-size: 1.2rem;
+            opacity: 0.8;
+            max-width: 700px;
+            margin: 0 auto 3.5rem;
+        }
+        .cta-btns {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        /* Footer Section */
+        .footer-main-section {
+            padding: 5rem 10% 3rem;
+            background: #f8fafc;
+            border-top: 1px solid #f1f5f9;
+        }
+        .footer-grid {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 4rem;
+            gap: 2rem;
+        }
+        .footer-logo-col {
+            max-width: 350px;
+        }
+        .footer-bottom {
+            border-top: 1px solid #e2e8f0;
+            padding-top: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Media Queries for Perfect Mobile Adaptability */
+        @media (max-width: 992px) {
+            .landing-hero {
+                padding: 120px 5% 60px !important;
+            }
+            .hero-container {
+                flex-direction: column;
+                gap: 40px;
+                text-align: center;
+            }
+            .landing-hero-content, .hero-quote-wrapper {
+                flex: none;
+                width: 100%;
+            }
+            .hero-title {
+                font-size: 2.75rem;
+            }
+            .hero-btns {
+                justify-content: center;
+            }
+            .quote-card {
+                padding: 2rem;
+            }
+
+            .story-section {
+                padding: 60px 5% !important;
+            }
+            .story-container {
+                flex-direction: column;
+                gap: 40px;
+                text-align: center;
+            }
+            .story-container img {
+                max-width: 480px;
+                margin: 0 auto;
+            }
+            .story-img-wrapper, .story-content-wrapper {
+                flex: none;
+                width: 100%;
+            }
+
+            .reunions-section {
+                padding: 60px 5% !important;
+            }
+            .reunions-header {
+                margin-bottom: 3rem;
+            }
+            .reunions-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .cta-section {
+                padding: 0 5% 60px !important;
+            }
+            .cta-card {
+                padding: 4rem 2rem;
+                border-radius: 24px;
+            }
+            .cta-title {
+                font-size: 2.25rem;
+            }
+            .cta-text {
+                font-size: 1.1rem;
+                margin-bottom: 2.5rem;
+            }
+
+            .footer-main-section {
+                padding: 4rem 5% 2rem !important;
+            }
+            .footer-grid {
+                flex-direction: column;
+                gap: 3rem;
+            }
+            .footer-logo-col {
+                max-width: 100%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .landing-nav {
+                padding: 0.5rem 1.5rem !important;
+            }
+            .hero-title {
+                font-size: 2.25rem;
+            }
+            .reunions-grid {
+                grid-template-columns: 1fr;
+            }
+            .footer-bottom {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .hero-btns {
+                flex-direction: column;
+                gap: 12px;
+                width: 100%;
+            }
+            .hero-btns a {
+                width: 100%;
+                text-align: center;
+                box-sizing: border-box;
+                display: block !important;
+                padding: 0.8rem 1.5rem !important;
+            }
+            .cta-btns {
+                flex-direction: column;
+                width: 100%;
+                gap: 12px;
+            }
+            .cta-btns a {
+                width: 100%;
+                text-align: center;
+                box-sizing: border-box;
+                display: inline-flex !important;
+                justify-content: center;
+                padding: 1rem 2rem !important;
+            }
+        }
     </style>
 </head>
 <body class="landing-page" style="background: white;">
@@ -30,13 +283,13 @@
         </div>
     </nav>
 
-    <header class="landing-hero" style="background: linear-gradient(rgba(6, 26, 61, 0.85), rgba(6, 26, 61, 0.85)), url('{{ asset('images/campus.png') }}'); background-size: cover; background-position: center; padding: 160px 10% 100px;">
-        <div style="display: flex; gap: 50px; align-items: center;">
-            <div class="landing-hero-content" style="flex: 1.2;">
-                <h1 style="font-size: 3.5rem; color: white; margin-bottom: 1.5rem; line-height: 1.2;">Stay Connected.<br>Give Back.<br><span style="color: #ffd700;">Create Impact.</span></h1>
-                <p style="color: #cbd5e0; line-height: 1.7; margin-bottom: 2.5rem; font-size: 1.1rem;">The GEC Alumni Association Platform connects thousands of graduates, empowers careers, and drives the legacy of our alma mater.</p>
+    <header class="landing-hero">
+        <div class="hero-container">
+            <div class="landing-hero-content">
+                <h1 class="hero-title">Stay Connected.<br>Give Back.<br><span style="color: #ffd700;">Create Impact.</span></h1>
+                <p class="hero-subtitle">The GEC Alumni Association Platform connects thousands of graduates, empowers careers, and drives the legacy of our alma mater.</p>
                 
-                <div style="display: flex; gap: 15px; margin-bottom: 4rem;">
+                <div class="hero-btns">
                     <a href="{{ url('/signup') }}" class="hero-btn" style="background: #0047ab; padding: 1rem 2.5rem; font-size: 1rem;">Join the Community &nbsp; <i class="fa-solid fa-arrow-right"></i></a>
                     <a href="{{ url('/login') }}" style="padding: 1rem 2.5rem; border: 1.5px solid rgba(255,255,255,0.3); border-radius: 8px; color: white; text-decoration: none; font-weight: 600; background: rgba(255,255,255,0.05);">Portal Login</a>
                 </div>
@@ -73,8 +326,8 @@
                 </div>
             </div>
             
-            <div style="flex: 0.8;">
-                <div class="quote-card" style="background: rgba(255,255,255,0.05); backdrop-filter: blur(10px); padding: 3rem; border-radius: 24px; border: 1px solid rgba(255,255,255,0.1);">
+            <div class="hero-quote-wrapper">
+                <div class="quote-card">
                     <i class="fa-solid fa-quote-left" style="font-size: 2.5rem; color: #0047ab; margin-bottom: 2rem; display: block;"></i>
                     <p style="font-size: 1.3rem; line-height: 1.6; font-style: italic; margin-bottom: 2.5rem; color: white;">"Our graduates are our greatest legacy. This platform is the bridge that keeps that legacy alive and thriving across generations."</p>
                     <div style="display: flex; align-items: center; gap: 15px;">
@@ -115,12 +368,12 @@
     </section>
 
     @if($featured_story)
-    <section class="section" style="background: #f8fafc; padding: 100px 10%;">
-        <div style="display: flex; gap: 80px; align-items: center;">
-            <div style="flex: 1;">
+    <section class="story-section">
+        <div class="story-container">
+            <div class="story-img-wrapper">
                 <img src="{{ asset('images/' . ($featured_story->image ?? 'alumni1.png')) }}" style="width: 100%; border-radius: 24px; box-shadow: 0 30px 60px rgba(0,0,0,0.1);">
             </div>
-            <div style="flex: 1.2;">
+            <div class="story-content-wrapper">
                 <p style="color: #0047ab; font-weight: 700; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 2px; margin-bottom: 1rem;">Success Story</p>
                 <h2 style="font-size: 2.5rem; color: #061a3d; margin-bottom: 2rem;">Inspiration Across Batches</h2>
                 <p style="font-size: 1.4rem; line-height: 1.6; font-style: italic; color: #4a5568; margin-bottom: 2.5rem;">"{{ $featured_story->story }}"</p>
@@ -138,13 +391,13 @@
     </section>
     @endif
 
-    <section class="section" style="padding: 100px 10%;">
-        <div style="text-align: center; margin-bottom: 5rem;">
+    <section class="reunions-section">
+        <div class="reunions-header">
             <p style="color: #0047ab; font-weight: 700; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 2px; margin-bottom: 1rem;">Upcoming Reunions</p>
             <h2 style="font-size: 2.5rem; color: #061a3d;">Save the Dates</h2>
         </div>
         
-        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem;">
+        <div class="reunions-grid">
             @forelse($upcoming_events as $event)
             <div class="card" style="padding: 2.5rem; border: 1px solid #f1f5f9; transition: all 0.3s ease;">
                 <div style="width: 60px; height: 60px; background: #ebf8ff; color: #0047ab; border-radius: 15px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: 800; margin-bottom: 2rem;">
@@ -161,11 +414,11 @@
         </div>
     </section>
 
-    <section class="section" style="padding: 0 10% 100px;">
-        <div style="background: #061a3d; border-radius: 32px; padding: 6rem; text-align: center; color: white;">
-            <h2 style="font-size: 3rem; margin-bottom: 1.5rem;">Join the GEC Legacy Today</h2>
-            <p style="font-size: 1.2rem; opacity: 0.8; max-width: 700px; margin: 0 auto 3.5rem;">Reconnect with your roots and contribute to the future of engineering excellence.</p>
-            <div style="display: flex; gap: 20px;">
+    <section class="cta-section">
+        <div class="cta-card">
+            <h2 class="cta-title">Join the GEC Legacy Today</h2>
+            <p class="cta-text">Reconnect with your roots and contribute to the future of engineering excellence.</p>
+            <div class="cta-btns">
                 <a href="{{ url('/signup') }}" style="padding: 1.2rem 3rem; background: white; color: #553c9a; text-decoration: none; border-radius: 12px; font-weight: 700; font-size: 1.1rem; display: inline-flex; align-items: center; gap: 10px;">
                     Register Now <i class="fa-solid fa-arrow-right"></i>
                 </a>
@@ -176,9 +429,9 @@
         </div>
     </section>
 
-    <footer style="padding: 5rem 10% 3rem; background: #f8fafc; border-top: 1px solid #f1f5f9;">
-        <div style="display: flex; justify-content: space-between; margin-bottom: 4rem;">
-            <div style="max-width: 350px;">
+    <footer class="footer-main-section">
+        <div class="footer-grid">
+            <div class="footer-logo-col">
                 <div class="auth-brand" style="margin-bottom: 2rem; display: flex; align-items: center; gap: 12px;">
                     <img src="{{ asset('images/logo.png') }}" style="width: 45px;">
                     <div style="line-height: 1.1;">
@@ -190,7 +443,7 @@
             </div>
             <div>
                 <h4 style="margin-bottom: 1.5rem; font-size: 1.1rem;">Platform</h4>
-                <ul style="list-style: none; display: flex; flex-direction: column; gap: 1rem;">
+                <ul style="list-style: none; display: flex; flex-direction: column; gap: 1rem; padding-left: 0;">
                     <li><a href="#" style="color: #718096; text-decoration: none; font-size: 0.9rem;">Directory</a></li>
                     <li><a href="#" style="color: #718096; text-decoration: none; font-size: 0.9rem;">Jobs</a></li>
                     <li><a href="#" style="color: #718096; text-decoration: none; font-size: 0.9rem;">Donations</a></li>
@@ -199,7 +452,7 @@
             </div>
             <div>
                 <h4 style="margin-bottom: 1.5rem; font-size: 1.1rem;">Support</h4>
-                <ul style="list-style: none; display: flex; flex-direction: column; gap: 1rem;">
+                <ul style="list-style: none; display: flex; flex-direction: column; gap: 1rem; padding-left: 0;">
                     <li><a href="#" style="color: #718096; text-decoration: none; font-size: 0.9rem;">Help Center</a></li>
                     <li><a href="#" style="color: #718096; text-decoration: none; font-size: 0.9rem;">Privacy Policy</a></li>
                     <li><a href="#" style="color: #718096; text-decoration: none; font-size: 0.9rem;">Terms of Service</a></li>
@@ -214,9 +467,9 @@
                 </div>
             </div>
         </div>
-        <div style="border-top: 1px solid #e2e8f0; padding-top: 2rem; display: flex; justify-content: space-between; align-items: center;">
-            <p style="color: #a0aec0; font-size: 0.85rem;">© {{ date('Y') }} GEC Alumni Association. All rights reserved.</p>
-            <p style="color: #a0aec0; font-size: 0.85rem;">Designed with excellence for the GEC Community.</p>
+        <div class="footer-bottom">
+            <p style="color: #a0aec0; font-size: 0.85rem; margin: 0;">© {{ date('Y') }} GEC Alumni Association. All rights reserved.</p>
+            <p style="color: #a0aec0; font-size: 0.85rem; margin: 0;">Designed with excellence for the GEC Community.</p>
         </div>
     </footer>
 </body>
