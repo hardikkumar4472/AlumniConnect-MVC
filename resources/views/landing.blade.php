@@ -23,13 +23,7 @@
                 <p style="font-size: 0.5rem; color: #718096; margin: 0; letter-spacing: 1px;">ASSOCIATION PLATFORM</p>
             </div>
         </div>
-        <ul class="landing-nav-links">
-            <li><a href="#" class="active">Home</a></li>
-            <li><a href="#">About</a></li>
-            <li><a href="#">Features</a></li>
-            <li><a href="#">Impact</a></li>
-            <li><a href="#">Contact</a></li>
-        </ul>
+
         <div style="display: flex; gap: 12px;">
             <a href="{{ url('/login') }}" style="padding: 0.6rem 1.5rem; border: 1.5px solid #0047ab; border-radius: 8px; color: #0047ab; text-decoration: none; font-weight: 600; font-size: 0.85rem;">Login</a>
             <a href="{{ url('/signup') }}" style="padding: 0.6rem 1.5rem; background: #0047ab; border-radius: 8px; color: white; text-decoration: none; font-weight: 600; font-size: 0.85rem;">Register</a>

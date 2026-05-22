@@ -35,13 +35,7 @@
                 <h3>{{ number_format($alumni_count ? ($alumni_count * 0.6) : 0) }}</h3>
             </div>
         </div>
-        <div class="stat-item">
-            <div class="stat-icon"><i class="fa-solid fa-globe"></i></div>
-            <div class="stat-info">
-                <span>Countries</span>
-                <h3>32</h3>
-            </div>
-        </div>
+
     </div>
 </div>
 
@@ -67,14 +61,7 @@
         <a href="{{ route('jobs') }}" class="card-link" style="color: #dd6b20;">Explore Jobs <i class="fa-solid fa-chevron-right"></i></a>
     </div>
     
-    @if(Auth::user()->role == 'student')
-    <div class="card">
-        <div class="card-icon" style="background: #fff5f5; color: #e53e3e;"><i class="fa-solid fa-graduation-cap"></i></div>
-        <h3>Scholarships</h3>
-        <p>Apply for financial aid and awards.</p>
-        <a href="#" class="card-link" style="color: #e53e3e;">View Available <i class="fa-solid fa-chevron-right"></i></a>
-    </div>
-    @endif
+
 </div>
 
 <div class="bottom-grid">
