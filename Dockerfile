@@ -14,8 +14,8 @@ RUN apt-get update && apt-get install -y \
 # Install PHP extensions
 RUN docker-php-ext-install pdo pdo_mysql mbstring exif pcntl bcmath gd
 
-# Install MongoDB extension
-RUN pecl install mongodb && docker-php-ext-enable mongodb
+# Install MongoDB extension (lock to 1.17.x to satisfy composer requirements)
+RUN pecl install mongodb-1.17.2 && docker-php-ext-enable mongodb
 
 # Enable Apache mod_rewrite for Laravel routing
 RUN a2enmod rewrite
