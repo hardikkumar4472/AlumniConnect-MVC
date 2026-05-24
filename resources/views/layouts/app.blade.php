@@ -450,6 +450,22 @@
     const mainContent    = document.getElementById('main-content');
     const sidebarOverlay = document.getElementById('sidebar-overlay');
 
+    function updateSidebarIcon() {
+        const icon = sidebarToggle.querySelector('i');
+        let isOpen = false;
+        if (window.innerWidth <= 768) {
+            isOpen = sidebar.classList.contains('mobile-open');
+        } else {
+            isOpen = !sidebar.classList.contains('collapsed');
+        }
+        
+        if (isOpen) {
+            icon.className = 'fa-solid fa-xmark';
+        } else {
+            icon.className = 'fa-solid fa-bars';
+        }
+    }
+
     function toggleSidebar() {
         if (window.innerWidth <= 768) {
             sidebar.classList.toggle('mobile-open');
@@ -458,12 +474,14 @@
             sidebar.classList.toggle('collapsed');
             mainContent.classList.toggle('expanded');
         }
+        updateSidebarIcon();
     }
     sidebarToggle.addEventListener('click', toggleSidebar);
     sidebarOverlay.addEventListener('click', () => {
         if (window.innerWidth <= 768) {
             sidebar.classList.remove('mobile-open');
             sidebarOverlay.classList.remove('active');
+            updateSidebarIcon();
         }
     });
     window.addEventListener('resize', () => {
@@ -471,7 +489,11 @@
             sidebar.classList.remove('mobile-open');
             sidebarOverlay.classList.remove('active');
         }
+        updateSidebarIcon();
     });
+
+    // Run on initial load
+    updateSidebarIcon();
 
     // ════════════════════════════════════════════
     //  Notification System

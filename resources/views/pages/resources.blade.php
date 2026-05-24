@@ -1,34 +1,48 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="page-header">
-    <h2>Resources</h2>
-    <p>Helpful documents, links, and materials for our alumni community.</p>
+<div class="page-header" style="margin-bottom: 2rem;">
+    <h2 style="font-size: 2rem; font-weight: 800; color: #0f172a; display: flex; align-items: center; gap: 10px;">
+        <i class="fa-solid fa-folder-open" style="color: #6366f1;"></i> Digital Resources
+    </h2>
+    <p style="color: #64748b; font-size: 0.95rem; font-weight: 500;">Helpful documents, career links, and templates shared by our alumni network.</p>
 </div>
 
-<div class="resources-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; margin-top: 2rem;">
+<div class="res-grid">
     @forelse($resources as $resource)
-    <a href="{{ $resource->link }}" target="_blank" style="text-decoration: none; color: inherit;">
-        <div class="card" style="display: flex; gap: 1rem; align-items: flex-start; transition: transform 0.2s; cursor: pointer;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='none'">
-            @php
-                $icon = 'fa-file-lines';
-                $color = '#3182ce';
-                if(str_contains(strtolower($resource->type), 'guide')) { $icon = 'fa-book'; $color = '#38a169'; }
-                elseif(str_contains(strtolower($resource->type), 'template')) { $icon = 'fa-file-word'; $color = '#805ad5'; }
-                elseif(str_contains(strtolower($resource->type), 'video')) { $icon = 'fa-video'; $color = '#e53e3e'; }
-            @endphp
-            <i class="fa-solid {{ $icon }}" style="font-size: 2rem; color: {{ $color }}; margin-top: 5px;"></i>
-            <div>
-                <h4 style="font-size: 1.1rem; margin-bottom: 5px;">{{ $resource->title }}</h4>
-                <p style="font-size: 0.8rem; color: #718096; margin-bottom: 5px; font-weight: 600;">{{ strtoupper($resource->type) }}</p>
-                <p style="font-size: 0.85rem; color: #4a5568;">{{ $resource->description }}</p>
+        @php
+            $typeLower = strtolower($resource->type);
+            $typeClass = 'generic';
+            $icon = 'fa-file-lines';
+            
+            if (str_contains($typeLower, 'guide') || str_contains($typeLower, 'book') || str_contains($typeLower, 'pdf')) {
+                $typeClass = 'guide';
+                $icon = 'fa-book-open';
+            } elseif (str_contains($typeLower, 'template') || str_contains($typeLower, 'doc') || str_contains($typeLower, 'sheet')) {
+                $typeClass = 'template';
+                $icon = 'fa-file-signature';
+            } elseif (str_contains($typeLower, 'video') || str_contains($typeLower, 'tutorial') || str_contains($typeLower, 'media')) {
+                $typeClass = 'video';
+                $icon = 'fa-circle-play';
+            }
+        @endphp
+        
+        <a href="{{ $resource->link }}" target="_blank" class="res-card">
+            <div class="res-icon-container {{ $typeClass }}">
+                <i class="fa-solid {{ $icon }}"></i>
             </div>
-        </div>
-    </a>
+            <div style="flex: 1; min-width: 0;">
+                <span class="res-type-tag {{ $typeClass }}">{{ $resource->type }}</span>
+                <h4 class="res-title">{{ $resource->title }}</h4>
+                <p class="res-desc">{{ $resource->description }}</p>
+            </div>
+        </a>
     @empty
-    <div style="grid-column: 1 / -1; text-align: center; padding: 3rem; background: #f8fafc; border-radius: 12px; border: 1px dashed #cbd5e0;">
-        <p style="color: #718096;">No resources have been published yet. Please check back later!</p>
-    </div>
+        <div style="grid-column: 1 / -1; text-align: center; padding: 5rem 2rem; background: #ffffff; border-radius: 24px; border: 1px dashed #cbd5e1;">
+            <i class="fa-solid fa-box-open" style="font-size: 3rem; color: #94a3b8; margin-bottom: 1.5rem; display: block; opacity: 0.5;"></i>
+            <h4 style="font-size: 1.1rem; color: #0f172a; margin-bottom: 0.5rem; font-weight: 700;">No Resources Yet</h4>
+            <p style="color: #64748b; font-size: 0.9rem;">We don't have any shared files or guidelines available at this time. Please check back later.</p>
+        </div>
     @endforelse
 </div>
 @endsection

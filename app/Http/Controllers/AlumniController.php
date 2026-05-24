@@ -232,7 +232,7 @@ class AlumniController extends Controller
             'message' => $request->message,
         ]);
         
-        return back()->with('success', 'Feedback submitted! It has been securely sent to the admin portal.'); 
+        return back()->with('success', 'Feedback submitted! It has been securely sent to the admin.'); 
     }
 
     public function resources() 
