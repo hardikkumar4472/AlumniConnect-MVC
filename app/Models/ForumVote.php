@@ -4,15 +4,16 @@ namespace App\Models;
 
 use Jenssegers\Mongodb\Eloquent\Model;
 
-class Feedback extends Model
+class ForumVote extends Model
 {
     protected $connection = 'mongodb';
-    protected $collection = 'feedback';
+    protected $collection = 'forum_votes';
 
     protected $fillable = [
         'user_id',
-        'subject',
-        'message',
+        'votable_id',
+        'votable_type', // 'question' | 'answer'
+        'type',         // 'upvote' | 'downvote'
     ];
 
     public function user()

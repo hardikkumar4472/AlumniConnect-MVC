@@ -46,6 +46,37 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/feedback', [AlumniController::class, 'feedback'])->name('feedback');
     Route::post('/feedback', [AlumniController::class, 'submitFeedback']);
     Route::get('/resources', [AlumniController::class, 'resources'])->name('resources');
+
+    // Notifications
+    Route::get('/notifications', [\App\Http\Controllers\NotificationController::class, 'index'])->name('notifications');
+    Route::post('/notifications/mark-read', [\App\Http\Controllers\NotificationController::class, 'markAllRead'])->name('notifications.markRead');
+
+    // Mentorship Routes
+    Route::post('/mentorship/toggle', [AlumniController::class, 'toggleMentorship'])->name('mentorship.toggle');
+    Route::post('/mentorship/request/{id}', [AlumniController::class, 'requestMentorship'])->name('mentorship.request');
+    Route::post('/mentorship/{id}/accept', [AlumniController::class, 'acceptMentorship'])->name('mentorship.accept');
+    Route::post('/mentorship/{id}/reject', [AlumniController::class, 'rejectMentorship'])->name('mentorship.reject');
+    Route::post('/mentorship/{id}/complete', [AlumniController::class, 'completeMentorship'])->name('mentorship.complete');
+
+    // Resume Review Routes
+    Route::get('/resumes', [AlumniController::class, 'resumePortal'])->name('resumes.portal');
+    Route::post('/resumes/request', [AlumniController::class, 'requestReview'])->name('resumes.request');
+    Route::post('/resumes/{id}/review', [AlumniController::class, 'submitReview'])->name('resumes.review');
+
+    // RSVP Routes
+    Route::post('/events/{id}/rsvp', [AlumniController::class, 'rsvpEvent'])->name('events.rsvp');
+
+    // Job Pipeline Status Update Route
+    Route::post('/jobs/application/{id}/status', [JobController::class, 'updateStatus'])->name('jobs.status');
+
+    // Q&A Forum Routes
+    Route::get('/forum', [\App\Http\Controllers\ForumController::class, 'index'])->name('forum.index');
+    Route::get('/forum/create', [\App\Http\Controllers\ForumController::class, 'create'])->name('forum.create');
+    Route::post('/forum', [\App\Http\Controllers\ForumController::class, 'store'])->name('forum.store');
+    Route::get('/forum/question/{id}', [\App\Http\Controllers\ForumController::class, 'show'])->name('forum.show');
+    Route::post('/forum/question/{id}/answer', [\App\Http\Controllers\ForumController::class, 'storeAnswer'])->name('forum.answer');
+    Route::post('/forum/question/{id}/accept/{answerId}', [\App\Http\Controllers\ForumController::class, 'acceptAnswer'])->name('forum.accept');
+    Route::post('/forum/vote', [\App\Http\Controllers\ForumController::class, 'vote'])->name('forum.vote');
     
     // Admin Routes
     Route::prefix('admin')->middleware(['admin'])->group(function () {

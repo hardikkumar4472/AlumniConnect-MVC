@@ -445,6 +445,88 @@
 <div class="alert-success"><i class="fa-solid fa-circle-check"></i> {{ session('campaign_success') }}</div>
 @endif
 
+{{-- ===== Analytics Dashboard & Leaderboards ===== --}}
+<div class="analytics-leaderboards">
+    {{-- Chart Container --}}
+    <div style="background: white; border-radius: 20px; padding: 1.75rem; border: 1px solid #f1f5f9; box-shadow: 0 4px 20px rgba(0,0,0,0.02); display: flex; flex-direction: column;">
+        <h3 style="font-size: 1.05rem; font-weight: 700; color: #0f172a; margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.5rem;">
+            <i class="fa-solid fa-chart-line" style="color: #3b82f6;"></i> Giving Analytics & Trends
+        </h3>
+        <div style="flex: 1; min-height: 220px; position: relative;">
+            <canvas id="givingChart"></canvas>
+        </div>
+    </div>
+
+    {{-- Leaderboard Tabs --}}
+    <div style="background: white; border-radius: 20px; padding: 1.75rem; border: 1px solid #f1f5f9; box-shadow: 0 4px 20px rgba(0,0,0,0.02);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+            <h3 style="font-size: 1.05rem; font-weight: 700; color: #0f172a; display: flex; align-items: center; gap: 0.5rem; margin: 0;">
+                <i class="fa-solid fa-trophy" style="color: #f59e0b;"></i> Contribution Leaderboards
+            </h3>
+            <div style="display: flex; gap: 4px; background: #f1f5f9; padding: 4px; border-radius: 10px;">
+                <button onclick="toggleLeaderboard('donors')" id="btn-lead-donors" style="padding: 0.35rem 0.75rem; border: none; border-radius: 8px; font-size: 0.75rem; font-weight: 700; cursor: pointer; transition: all 0.2s; background: white; color: #0047ab; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">Donors</button>
+                <button onclick="toggleLeaderboard('batches')" id="btn-lead-batches" style="padding: 0.35rem 0.75rem; border: none; border-radius: 8px; font-size: 0.75rem; font-weight: 700; cursor: pointer; transition: all 0.2s; background: transparent; color: #64748b;">Batches</button>
+            </div>
+        </div>
+
+        {{-- Donors List --}}
+        <div id="leaderboard-donors" style="display: flex; flex-direction: column; gap: 0.75rem;">
+            @forelse($individual_leaderboard as $idx => $item)
+            <div style="display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1rem; background: #f8fafc; border-radius: 12px; border: 1px solid #f1f5f9; transition: all 0.2s;">
+                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                    <div style="width: 28px; height: 28px; border-radius: 50%; background: {{ $idx == 0 ? '#fef3c7' : ($idx == 1 ? '#e2e8f0' : ($idx == 2 ? '#ffedd5' : '#f1f5f9')) }}; color: {{ $idx == 0 ? '#d97706' : ($idx == 1 ? '#475569' : ($idx == 2 ? '#c2410c' : '#64748b')) }}; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 800;">
+                        {{ $idx + 1 }}
+                    </div>
+                    <div>
+                        <span style="font-size: 0.88rem; font-weight: 700; color: #1e293b; display: block;">{{ $item['name'] }}</span>
+                        <span style="font-size: 0.72rem; color: #94a3b8;">{{ $item['count'] }} donation(s)</span>
+                    </div>
+                </div>
+                <span style="font-size: 0.9rem; font-weight: 800; color: #0047ab;">₹{{ number_format($item['total']) }}</span>
+            </div>
+            @empty
+            <div style="text-align: center; color: #94a3b8; padding: 2rem 0; font-size: 0.85rem;">No contributions registered yet.</div>
+            @endforelse
+        </div>
+
+        {{-- Batches List --}}
+        <div id="leaderboard-batches" style="display: none; flex-direction: column; gap: 0.75rem;">
+            @forelse($batch_leaderboard as $idx => $item)
+            <div style="display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1rem; background: #f8fafc; border-radius: 12px; border: 1px solid #f1f5f9;">
+                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                    <div style="width: 28px; height: 28px; border-radius: 50%; background: {{ $idx == 0 ? '#fef3c7' : ($idx == 1 ? '#e2e8f0' : ($idx == 2 ? '#ffedd5' : '#f1f5f9')) }}; color: {{ $idx == 0 ? '#d97706' : ($idx == 1 ? '#475569' : ($idx == 2 ? '#c2410c' : '#64748b')) }}; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 800;">
+                        {{ $idx + 1 }}
+                    </div>
+                    <div>
+                        <span style="font-size: 0.88rem; font-weight: 700; color: #1e293b; display: block;">{{ $item['year'] }}</span>
+                        <span style="font-size: 0.72rem; color: #94a3b8;">{{ $item['count'] }} contributor(s)</span>
+                    </div>
+                </div>
+                <span style="font-size: 0.9rem; font-weight: 800; color: #22c55e;">₹{{ number_format($item['total']) }}</span>
+            </div>
+            @empty
+            <div style="text-align: center; color: #94a3b8; padding: 2rem 0; font-size: 0.85rem;">No batch statistics available.</div>
+            @endforelse
+        </div>
+    </div>
+</div>
+
+{{-- CSS style override to make analytics visual layout side-by-side grid --}}
+<style>
+.analytics-leaderboards {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 2rem;
+    margin-bottom: 2.5rem;
+}
+@media (max-width: 768px) {
+    .analytics-leaderboards {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+}
+</style>
+
 {{-- ===== Active Campaigns ===== --}}
 <div class="section-heading"><i class="fa-solid fa-bullhorn" style="color: #0047ab;"></i> Active Campaigns</div>
 
@@ -734,7 +816,91 @@ $categoryColors = [
 @endsection
 
 @section('scripts')
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
+document.addEventListener("DOMContentLoaded", function() {
+    const ctx = document.getElementById('givingChart').getContext('2d');
+    const labelData = {!! json_encode($trends->keys()) !!};
+    const valueData = {!! json_encode($trends->values()) !!};
+
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labelData.length ? labelData : [new Date().toLocaleDateString('en-US', {month: 'short', year: 'numeric'})],
+            datasets: [{
+                label: 'Monthly Giving (₹)',
+                data: valueData.length ? valueData : [0],
+                borderColor: '#3b82f6',
+                backgroundColor: 'rgba(59, 130, 246, 0.05)',
+                borderWidth: 3,
+                fill: true,
+                tension: 0.35,
+                pointBackgroundColor: '#0047ab',
+                pointBorderColor: '#ffffff',
+                pointHoverRadius: 7,
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    padding: 12,
+                    backgroundColor: '#1e293b',
+                    titleFont: { family: 'Outfit', size: 13, weight: 'bold' },
+                    bodyFont: { family: 'Outfit', size: 12 },
+                    callbacks: {
+                        label: function(context) {
+                            return ' ₹' + context.parsed.y.toLocaleString('en-IN');
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    grid: { color: '#f1f5f9' },
+                    ticks: {
+                        font: { family: 'Outfit', size: 10 },
+                        callback: function(value) { return '₹' + value; }
+                    }
+                },
+                x: {
+                    grid: { display: false },
+                    ticks: { font: { family: 'Outfit', size: 10 } }
+                }
+            }
+        }
+    });
+});
+
+function toggleLeaderboard(type) {
+    const listDonors = document.getElementById('leaderboard-donors');
+    const listBatches = document.getElementById('leaderboard-batches');
+    const btnDonors = document.getElementById('btn-lead-donors');
+    const btnBatches = document.getElementById('btn-lead-batches');
+
+    if (type === 'donors') {
+        listDonors.style.display = 'flex';
+        listBatches.style.display = 'none';
+        btnDonors.style.background = 'white';
+        btnDonors.style.color = '#0047ab';
+        btnDonors.style.boxShadow = '0 2px 4px rgba(0,0,0,0.05)';
+        btnBatches.style.background = 'transparent';
+        btnBatches.style.color = '#64748b';
+        btnBatches.style.boxShadow = 'none';
+    } else {
+        listDonors.style.display = 'none';
+        listBatches.style.display = 'flex';
+        btnBatches.style.background = 'white';
+        btnBatches.style.color = '#0047ab';
+        btnBatches.style.boxShadow = '0 2px 4px rgba(0,0,0,0.05)';
+        btnDonors.style.background = 'transparent';
+        btnDonors.style.color = '#64748b';
+        btnDonors.style.boxShadow = 'none';
+    }
+}
+
 // Modal state
 let currentCampaignId = null;
 let currentPurpose    = null;

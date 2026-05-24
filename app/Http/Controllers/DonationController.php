@@ -39,8 +39,41 @@ class DonationController extends Controller
                             ->where('status', 'success')
                             ->sum('amount');
 
+        // Aggregations using collections for maximum safety and compatibility
+        $all_success = Donation::where('status', 'success')->get();
+
+        // 1. Individual Donors Leaderboard
+        $individual_leaderboard = $all_success->groupBy('user_id')->map(function($group) {
+            return [
+                'name'  => $group->first()->user_name ?? 'Alumni Contributor',
+                'total' => $group->sum('amount'),
+                'count' => $group->count(),
+            ];
+        })->sortByDesc('total')->take(5)->values();
+
+        // 2. Batch Leaderboard (Grouped by graduation year)
+        $batch_leaderboard = $all_success->map(function($d) {
+            $user = \App\Models\User::find($d->user_id);
+            $d->graduation_year = $user->graduation_year ?? 'N/A';
+            return $d;
+        })->groupBy('graduation_year')->map(function($group, $year) {
+            return [
+                'year'  => $year === 'N/A' ? 'Unknown' : 'Batch of ' . $year,
+                'total' => $group->sum('amount'),
+                'count' => $group->count(),
+            ];
+        })->sortByDesc('total')->take(5)->values();
+
+        // 3. Dynamic Trends data for Chart.js
+        $trends = $all_success->groupBy(function($d) {
+            return $d->created_at ? $d->created_at->format('M Y') : now()->format('M Y');
+        })->map(function($group) {
+            return $group->sum('amount');
+        })->take(6);
+
         return view('pages.donations', compact(
-            'campaigns', 'my_donations', 'total_raised', 'donor_count', 'my_total'
+            'campaigns', 'my_donations', 'total_raised', 'donor_count', 'my_total',
+            'individual_leaderboard', 'batch_leaderboard', 'trends'
         ));
     }
 

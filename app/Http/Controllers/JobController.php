@@ -104,4 +104,24 @@ class JobController extends Controller
 
         return response()->download($path);
     }
+
+    public function updateStatus(Request $request, $id)
+    {
+        $application = JobApplication::findOrFail($id);
+        $job         = JobOpportunity::findOrFail($application->job_id);
+
+        if ($job->posted_by !== Auth::id() && Auth::user()->role !== 'admin') {
+            return back()->with('error', 'Unauthorized access.');
+        }
+
+        $request->validate([
+            'status' => 'required|string|in:applied,shortlisted,interviewing,offered,rejected',
+        ]);
+
+        $application->update([
+            'status' => $request->status,
+        ]);
+
+        return back()->with('success', 'Candidate application status successfully updated to: ' . ucfirst($request->status));
+    }
 }

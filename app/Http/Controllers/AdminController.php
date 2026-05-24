@@ -124,6 +124,14 @@ class AdminController extends Controller
     public function events()
     {
         $events = AlumniEvent::orderBy('date', 'asc')->get();
+        
+        foreach ($events as $event) {
+            $event->rsvps = \App\Models\EventRsvp::with('user')
+                ->where('event_id', (string) $event->_id)
+                ->get();
+            $event->rsvps_count = $event->rsvps->count();
+        }
+        
         return view('admin.events', compact('events'));
     }
 
@@ -214,8 +222,8 @@ class AdminController extends Controller
 
     public function feedback()
     {
-        $feedbacks = \App\Models\Feedback::with('user')->orderBy('created_at', 'desc')->get();
-        return view('admin.feedback', compact('feedbacks'));
+        $feedback = \App\Models\Feedback::with('user')->orderBy('created_at', 'desc')->get();
+        return view('admin.feedback', compact('feedback'));
     }
 
     // Resource Management

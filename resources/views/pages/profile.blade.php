@@ -222,6 +222,13 @@
                         {{ ucfirst($user->role) }}
                     </span>
                 </span>
+                @if($user->role === 'alumni' && ($user->is_mentor ?? false))
+                <span>
+                    <span style="padding: 3px 10px; border-radius: 20px; background: #10b98118; color: #10b981; font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">
+                        🟢 Mentor
+                    </span>
+                </span>
+                @endif
             </div>
             <div class="profile-actions">
                 @if($connection && $connection->status == 'accepted')
@@ -286,6 +293,82 @@
             They are an active member of the GEC Alumni Connect platform.
         </p>
     </div>
+
+    {{-- Skills & Expertise --}}
+    @if(is_array($user->skills) && count($user->skills) > 0)
+    <div class="info-card">
+        <div class="info-card-title"><i class="fa-solid fa-code"></i> Skills & Expertise</div>
+        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+            @foreach($user->skills as $skill)
+            <span style="padding: 0.4rem 0.85rem; border-radius: 50px; background: #f1f5f9; color: #475569; font-size: 0.8rem; font-weight: 600; border: 1px solid #e2e8f0; text-transform: capitalize;">
+                {{ $skill }}
+            </span>
+            @endforeach
+        </div>
+    </div>
+    @endif
+
+    {{-- Mentorship Preferences Toggler (Alumni Own profile) --}}
+    @if(Auth::id() == $user->_id && $user->role === 'alumni')
+    <div class="info-card" style="border: 1.5px dashed #3b82f6; background: #f8fbff;">
+        <div class="info-card-title" style="color: #1d4ed8;"><i class="fa-solid fa-sliders"></i> Mentorship Dashboard</div>
+        <form action="{{ route('mentorship.toggle') }}" method="POST">
+            @csrf
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; padding-bottom: 0.75rem; border-bottom: 1px solid #dbeafe;">
+                <div>
+                    <span style="font-size: 0.9rem; font-weight: 700; color: #1e3a8a; display: block;">Open to Mentoring</span>
+                    <span style="font-size: 0.75rem; color: #64748b;">Allow students to request your career guidance & resume reviews.</span>
+                </div>
+                <label style="position: relative; display: inline-block; width: 48px; height: 26px; user-select: none;">
+                    <input type="checkbox" name="is_mentor" value="1" {{ ($user->is_mentor ?? false) ? 'checked' : '' }} style="opacity: 0; width: 0; height: 0;" id="mentorToggle">
+                    <span class="toggle-slider" style="position: absolute; cursor: pointer; inset: 0; background-color: #cbd5e1; transition: .3s; border-radius: 34px;"></span>
+                </label>
+            </div>
+            
+            <div style="margin-bottom: 1rem;">
+                <label style="font-size: 0.75rem; font-weight: 700; color: #1e3a8a; display: block; margin-bottom: 0.4rem; text-transform: uppercase;">Skills & Expertise Tags</label>
+                <input type="text" name="skills" value="{{ is_array($user->skills) ? implode(', ', $user->skills) : '' }}" placeholder="e.g. React, Java, System Design, Product Management" 
+                       style="width: 100%; padding: 0.65rem 0.85rem; border: 1.5px solid #bfdbfe; border-radius: 10px; font-size: 0.88rem; outline: none; background: white; color: #1e293b; box-sizing: border-box;">
+                <span style="font-size: 0.72rem; color: #64748b; margin-top: 4px; display: block;">Enter skills separated by commas.</span>
+            </div>
+            
+            <button type="submit" class="btn-primary" style="padding: 0.5rem 1.25rem; font-size: 0.82rem;">
+                <i class="fa-solid fa-floppy-disk"></i> Save Mentorship Settings
+            </button>
+        </form>
+    </div>
+    
+    <style>
+    .toggle-slider::before {
+        position: absolute; content: "";
+        height: 18px; width: 18px; left: 4px; bottom: 4px;
+        background-color: white; transition: .3s; border-radius: 50%;
+    }
+    input:checked + .toggle-slider { background-color: #3b82f6; }
+    input:checked + .toggle-slider::before { transform: translateX(22px); }
+    </style>
+    @endif
+
+    {{-- Request Mentorship (Connected Student looking at Alumni Mentor) --}}
+    @if(Auth::check() && Auth::user()->role === 'student' && $user->role === 'alumni' && ($user->is_mentor ?? false) && $connection && $connection->status == 'accepted')
+    <div class="info-card" style="background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%); border-color: #a7f3d0; box-shadow: 0 4px 14px rgba(16,185,129,0.06);">
+        <div class="info-card-title" style="color: #059669; font-weight: 800;"><i class="fa-solid fa-graduation-cap"></i> Request Mentorship</div>
+        <p style="font-size: 0.88rem; color: #065f46; line-height: 1.6; margin-bottom: 1.25rem;">
+            This certified GEC alumnus is actively mentoring students! You can start a structured mentorship program complete with mock interviews and resume evaluations.
+        </p>
+        <form action="{{ route('mentorship.request', $user->_id) }}" method="POST">
+            @csrf
+            <div style="margin-bottom: 1rem;">
+                <label style="font-size: 0.75rem; font-weight: 700; color: #065f46; display: block; margin-bottom: 0.4rem; text-transform: uppercase;">Introductory Note</label>
+                <textarea name="message" rows="3" placeholder="Briefly describe your career objectives and what you hope to achieve with this mentor..." required
+                          style="width: 100%; padding: 0.75rem 1rem; border: 1.5px solid #a7f3d0; border-radius: 12px; font-size: 0.88rem; color: #1e293b; background: white; outline: none; resize: vertical; box-sizing: border-box; font-family: inherit;"></textarea>
+            </div>
+            <button type="submit" class="btn-primary" style="background: linear-gradient(135deg, #059669, #047857); box-shadow: 0 4px 12px rgba(5,150,105,0.25);">
+                <i class="fa-solid fa-paper-plane" style="margin-right: 4px;"></i> Request Official Mentorship
+            </button>
+        </form>
+    </div>
+    @endif
 
     {{-- Contact Information --}}
     <div class="info-card">

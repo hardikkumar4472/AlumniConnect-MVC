@@ -75,8 +75,22 @@
             @if(Auth::id() == $job->posted_by)
                 <a href="{{ route('jobs.applications', $job->_id) }}" class="hero-btn" style="padding: 0.6rem 1.5rem; background: #2b6cb0; text-decoration: none;">View Applications ({{ $job->applications ? $job->applications->count() : 0 }})</a>
             @elseif(Auth::user()->role === 'student')
-                @if(in_array((string)$job->_id, $applied_job_ids))
-                    <button disabled style="padding: 0.6rem 1.5rem; background: #e2e8f0; color: #4a5568; border: none; border-radius: 8px; font-weight: 600;">Applied</button>
+                @if(isset($applied_jobs_status[(string)$job->_id]))
+                    @php
+                        $status = $applied_jobs_status[(string)$job->_id];
+                        $stColors = [
+                            'pending'      => ['bg' => '#edf2f7', 'text' => '#4a5568', 'lbl' => 'Applied'],
+                            'applied'      => ['bg' => '#edf2f7', 'text' => '#4a5568', 'lbl' => 'Applied'],
+                            'shortlisted'  => ['bg' => '#e0f2fe', 'text' => '#0369a1', 'lbl' => 'Shortlisted'],
+                            'interviewing' => ['bg' => '#fef3c7', 'text' => '#d97706', 'lbl' => 'Interviewing'],
+                            'offered'      => ['bg' => '#dcfce7', 'text' => '#15803d', 'lbl' => 'Offered 🎉'],
+                            'rejected'     => ['bg' => '#fef2f2', 'text' => '#991b1b', 'lbl' => 'Rejected'],
+                        ];
+                        $meta = $stColors[$status] ?? ['bg' => '#edf2f7', 'text' => '#4a5568', 'lbl' => 'Applied'];
+                    @endphp
+                    <span style="display: inline-block; padding: 0.6rem 1.5rem; background: {{ $meta['bg'] }}; color: {{ $meta['text'] }}; border-radius: 8px; font-weight: 800; text-transform: uppercase; font-size: 0.72rem; letter-spacing: 0.5px; border: 1px solid {{ $meta['text'] }}30; text-align: center; min-width: 100px;">
+                        {{ $meta['lbl'] }}
+                    </span>
                 @else
                     <button onclick="openApplyModal('{{ $job->_id }}')" class="hero-btn" style="padding: 0.6rem 1.5rem; border: none; cursor: pointer;">Apply Now</button>
                 @endif
