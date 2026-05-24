@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ConnectionController;
 use App\Http\Controllers\JobController;
+use App\Http\Controllers\DonationController;
 
 Route::get('/', [AlumniController::class, 'index'])->name('home');
 
@@ -37,8 +38,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/jobs/{id}/applications', [JobController::class, 'viewApplications'])->name('jobs.applications');
     Route::get('/applications/{id}/resume', [JobController::class, 'downloadResume'])->name('jobs.resume');
     Route::get('/events', [AlumniController::class, 'events'])->name('events');
-    Route::get('/donations', [AlumniController::class, 'donations'])->name('donations');
-    Route::post('/donations', [AlumniController::class, 'processDonation']);
+    Route::get('/donations', [DonationController::class, 'index'])->name('donations');
+    Route::post('/donations/order', [DonationController::class, 'createOrder'])->name('donations.order');
+    Route::post('/donations/verify', [DonationController::class, 'verifyPayment'])->name('donations.verify');
+    Route::post('/donations/campaign', [DonationController::class, 'createCampaign'])->name('donations.campaign');
     Route::get('/stories', [AlumniController::class, 'stories'])->name('stories');
     Route::get('/feedback', [AlumniController::class, 'feedback'])->name('feedback');
     Route::post('/feedback', [AlumniController::class, 'submitFeedback']);
@@ -83,5 +86,6 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/news/{id}', [AdminController::class, 'deleteNews'])->name('admin.news.delete');
         
         Route::get('/feedback', [AdminController::class, 'feedback'])->name('admin.feedback');
+        Route::get('/donations', [AdminController::class, 'donations'])->name('admin.donations');
     });
 });

@@ -63,18 +63,30 @@
 
     <section class="card">
         <div class="section-title">
-            <h3>System Alerts</h3>
+            <h3>Recent Donations</h3>
+            <a href="{{ route('admin.donations') }}" class="view-all">View All</a>
         </div>
-        <div style="display: flex; flex-direction: column; gap: 1rem;">
-            <div style="padding: 1rem; background: #fff5f5; border-radius: 12px; border-left: 4px solid #e53e3e;">
-                <h5 style="color: #e53e3e; margin-bottom: 5px;">Security Update</h5>
-                <p style="font-size: 0.8rem; color: #718096;">New security patches are available for the database connection.</p>
+        @if(count($recent_donations) > 0)
+        <div style="display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1rem;">
+            @foreach($recent_donations as $d)
+            <div style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; border-radius: 12px; background: #f8fafc;">
+                <img src="https://ui-avatars.com/api/?name={{ urlencode($d->user_name ?? 'A') }}&background=random&size=64"
+                     style="width: 36px; height: 36px; border-radius: 50%; object-fit: cover; flex-shrink: 0;" alt="">
+                <div style="flex: 1; min-width: 0;">
+                    <div style="font-size: 0.85rem; font-weight: 700; color: #0f172a;">{{ $d->user_name ?? 'Anonymous' }}</div>
+                    <div style="font-size: 0.72rem; color: #94a3b8;">{{ $d->purpose }} • {{ $d->created_at->diffForHumans() }}</div>
+                </div>
+                <div style="font-size: 1rem; font-weight: 800; color: #0047ab; flex-shrink: 0;">₹{{ number_format($d->amount) }}</div>
             </div>
-            <div style="padding: 1rem; background: #fffaf0; border-radius: 12px; border-left: 4px solid #dd6b20;">
-                <h5 style="color: #dd6b20; margin-bottom: 5px;">Database Optimization</h5>
-                <p style="font-size: 0.8rem; color: #718096;">High query volume detected on Job Portal collections.</p>
-            </div>
+            @endforeach
         </div>
+        @else
+        <div style="text-align: center; padding: 2rem; color: #94a3b8; font-size: 0.88rem;">
+            <i class="fa-solid fa-hand-holding-heart" style="font-size: 1.5rem; margin-bottom: 0.5rem; display: block;"></i>
+            No donations yet.
+        </div>
+        @endif
     </section>
+
 </div>
 @endsection

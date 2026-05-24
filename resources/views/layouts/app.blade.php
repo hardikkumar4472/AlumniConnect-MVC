@@ -40,7 +40,10 @@
                 <i class="fa-solid fa-calendar-days"></i>
                 <span>Events & Reunions</span>
             </a>
-
+            <a href="{{ route('donations') }}" class="nav-item {{ request()->routeIs('donations') ? 'active' : '' }}">
+                <i class="fa-solid fa-hand-holding-heart"></i>
+                <span>Donations</span>
+            </a>
 
             <a href="{{ route('stories') }}" class="nav-item {{ request()->routeIs('stories') ? 'active' : '' }}">
                 <i class="fa-solid fa-star"></i>
@@ -87,6 +90,10 @@
             <a href="{{ route('admin.feedback') }}" class="nav-item {{ request()->routeIs('admin.feedback') ? 'active' : '' }}" style="padding-left: 2rem; font-size: 0.8rem;">
                 <i class="fa-solid fa-message"></i>
                 <span>View Feedback</span>
+            </a>
+            <a href="{{ route('admin.donations') }}" class="nav-item {{ request()->routeIs('admin.donations') ? 'active' : '' }}" style="padding-left: 2rem; font-size: 0.8rem;">
+                <i class="fa-solid fa-hand-holding-heart" style="{{ request()->routeIs('admin.donations') ? '' : 'color: #f59e0b;' }}"></i>
+                <span>Donation Tracker</span>
             </a>
             @endif
         </nav>

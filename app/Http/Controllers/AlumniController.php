@@ -99,7 +99,15 @@ class AlumniController extends Controller
             })->first();
         }
 
-        return view('pages.profile', compact('user', 'connection'));
+        // Donation summary visible on alumni profile
+        $profile_donation_total = \App\Models\Donation::where('user_id', (string) $user->_id)
+            ->where('status', 'success')
+            ->sum('amount');
+        $profile_donation_count = \App\Models\Donation::where('user_id', (string) $user->_id)
+            ->where('status', 'success')
+            ->count();
+
+        return view('pages.profile', compact('user', 'connection', 'profile_donation_total', 'profile_donation_count'));
     }
 
     public function network() 
@@ -157,8 +165,12 @@ class AlumniController extends Controller
         return view('pages.events', compact('events'));
     }
 
-    public function donations() { return view('pages.donations'); }
-    public function processDonation(Request $request) { return back()->with('success', 'Thank you for your donation!'); }
+    public function donations() {
+        return app(\App\Http\Controllers\DonationController::class)->index();
+    }
+    public function processDonation(Request $request) {
+        return back()->with('success', 'Thank you for your donation!');
+    }
 
     public function stories()
     {

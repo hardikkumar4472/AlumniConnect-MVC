@@ -7,6 +7,7 @@ use App\Models\AlumniEvent;
 use App\Models\JobOpportunity;
 use App\Models\SuccessStory;
 use App\Models\Donation;
+use App\Models\DonationCampaign;
 use App\Models\Feedback;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -16,19 +17,67 @@ class AdminController extends Controller
     public function dashboard()
     {
         $stats = [
-            'total_users' => User::count(),
-            'total_alumni' => User::where('role', 'alumni')->count(),
-            'total_students' => User::where('role', 'student')->count(),
-            'total_donations' => Donation::sum('amount'),
-            'active_jobs' => JobOpportunity::count(),
-            'active_events' => AlumniEvent::count(),
-            'pending_feedback' => Feedback::count(),
+            'total_users'     => User::count(),
+            'total_alumni'    => User::where('role', 'alumni')->count(),
+            'total_students'  => User::where('role', 'student')->count(),
+            'total_donations' => Donation::where('status', 'success')->sum('amount'),
+            'active_jobs'     => JobOpportunity::count(),
+            'active_events'   => AlumniEvent::count(),
+            'pending_feedback'=> Feedback::count(),
         ];
 
-        $recent_users = User::orderBy('created_at', 'desc')->take(5)->get();
-        $recent_donations = Donation::orderBy('created_at', 'desc')->take(5)->get();
+        $recent_users     = User::orderBy('created_at', 'desc')->take(5)->get();
+        $recent_donations = Donation::where('status', 'success')
+                                ->orderBy('created_at', 'desc')
+                                ->take(5)
+                                ->get();
 
         return view('admin.dashboard', compact('stats', 'recent_users', 'recent_donations'));
+    }
+
+    // Donation Management
+    public function donations(Request $request)
+    {
+        $query = Donation::where('status', 'success')->orderBy('created_at', 'desc');
+
+        if ($request->filled('search')) {
+            $s = $request->search;
+            $query->where(function ($q) use ($s) {
+                $q->where('user_name', 'like', '%' . $s . '%')
+                  ->orWhere('purpose', 'like', '%' . $s . '%')
+                  ->orWhere('payment_id', 'like', '%' . $s . '%');
+            });
+        }
+
+        if ($request->filled('purpose')) {
+            $query->where('purpose', $request->purpose);
+        }
+
+        $donations     = $query->paginate(15);
+        $total_raised  = Donation::where('status', 'success')->sum('amount');
+        $donor_count   = Donation::where('status', 'success')->distinct('user_id')->count('user_id');
+        $this_month    = Donation::where('status', 'success')
+                            ->where('created_at', '>=', now()->startOfMonth())
+                            ->sum('amount');
+        $campaigns     = DonationCampaign::orderBy('created_at', 'desc')->get();
+
+        // Top donors
+        $top_donors = Donation::where('status', 'success')
+                        ->get()
+                        ->groupBy('user_id')
+                        ->map(fn($group) => [
+                            'user_name' => $group->first()->user_name,
+                            'user_id'   => $group->first()->user_id,
+                            'total'     => $group->sum('amount'),
+                            'count'     => $group->count(),
+                        ])
+                        ->sortByDesc('total')
+                        ->take(10)
+                        ->values();
+
+        return view('admin.donations', compact(
+            'donations', 'total_raised', 'donor_count', 'this_month', 'campaigns', 'top_donors'
+        ));
     }
 
     // User Management
