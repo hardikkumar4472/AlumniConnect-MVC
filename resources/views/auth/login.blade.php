@@ -33,6 +33,13 @@
                 <form action="{{ route('login') }}" method="POST">
                     @csrf
                     
+                    @if (session('message'))
+                        <div style="background-color: #eff6ff; border: 1px solid #bfdbfe; color: #1e3a8a; padding: 12px; border-radius: 8px; margin-bottom: 15px; font-size: 0.85rem; display: flex; align-items: center; gap: 8px; font-family: 'Outfit', sans-serif;">
+                            <i class="fa-solid fa-circle-info" style="color: #3b82f6;"></i>
+                            <span>{{ session('message') }}</span>
+                        </div>
+                    @endif
+                    
                     @if ($errors->any())
                         <div style="background-color: #fee2e2; border: 1px solid #f87171; color: #b91c1c; padding: 10px; border-radius: 8px; margin-bottom: 15px;">
                             <ul style="margin: 0; padding-left: 20px;">
