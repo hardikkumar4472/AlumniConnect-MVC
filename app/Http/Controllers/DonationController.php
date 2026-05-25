@@ -9,16 +9,8 @@ use Illuminate\Support\Facades\Auth;
 
 class DonationController extends Controller
 {
-    // -----------------------------------------------------------------------
-    // Razorpay DUMMY credentials (hardcoded for demo)
-    // In production replace with config('services.razorpay.key_id') etc.
-    // -----------------------------------------------------------------------
     const RAZORPAY_KEY_ID     = 'rzp_test_XXXXXXXXXXXXXXXX';
     const RAZORPAY_KEY_SECRET = 'XXXXXXXXXXXXXXXXXXXXXXXX';
-
-    /**
-     * Show the main donations page.
-     */
     public function index()
     {
         $campaigns    = DonationCampaign::where('is_active', true)
