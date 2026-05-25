@@ -13,6 +13,69 @@
         .feature-card h3 { font-size: 1.1rem; margin-bottom: 0.5rem; }
         .feature-card p { font-size: 0.85rem; color: #718096; line-height: 1.5; }
 
+        /* Success Stories Carousel/Slider Styles */
+        .story-slider-wrapper {
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+        }
+        .story-slides-container {
+            display: flex;
+            width: 100%;
+        }
+        .story-slide {
+            min-width: 100%;
+            display: flex;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+        .story-slide.active {
+            opacity: 1;
+        }
+        .slider-controls {
+            display: flex;
+            gap: 15px;
+        }
+        .slider-btn {
+            background: white;
+            border: 1px solid #e2e8f0;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            color: #0047ab;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+        }
+        .slider-btn:hover {
+            background: #0047ab;
+            color: white;
+            border-color: #0047ab;
+            transform: scale(1.08);
+        }
+        .slider-dots {
+            display: flex;
+            gap: 8px;
+        }
+        .slider-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #cbd5e0;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .slider-dot.active {
+            background: #0047ab;
+            width: 24px;
+            border-radius: 4px;
+        }
+
         /* Responsive Layout Overrides */
         .landing-hero {
             background: linear-gradient(rgba(6, 26, 61, 0.85), rgba(6, 26, 61, 0.85)), url('{{ asset('images/campus.png') }}') !important;
@@ -367,26 +430,48 @@
         </div>
     </section>
 
-    @if($featured_story)
-    <section class="story-section">
-        <div class="story-container">
-            <div class="story-img-wrapper">
-                <img src="{{ asset('images/' . ($featured_story->image ?? 'alumni1.png')) }}" style="width: 100%; border-radius: 24px; box-shadow: 0 30px 60px rgba(0,0,0,0.1);">
-            </div>
-            <div class="story-content-wrapper">
-                <p style="color: #0047ab; font-weight: 700; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 2px; margin-bottom: 1rem;">Success Story</p>
-                <h2 style="font-size: 2.5rem; color: #061a3d; margin-bottom: 2rem;">Inspiration Across Batches</h2>
-                <p style="font-size: 1.4rem; line-height: 1.6; font-style: italic; color: #4a5568; margin-bottom: 2.5rem;">"{{ $featured_story->story }}"</p>
-                <div style="display: flex; align-items: center; gap: 20px;">
-                    <div style="width: 60px; height: 60px; background: #0047ab; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem;">
-                        <i class="fa-solid fa-user-graduate"></i>
+    @if($featured_stories && $featured_stories->count() > 0)
+    <section class="story-section" style="position: relative; overflow: hidden; padding: 100px 10%;">
+        <div class="story-slider-wrapper">
+            <div class="story-slides-container" id="storySlides">
+                @foreach($featured_stories as $index => $story)
+                <div class="story-slide @if($index === 0) active @endif" style="display: @if($index === 0) flex @else none @endif; gap: 80px; align-items: center;" data-index="{{ $index }}">
+                    <div class="story-img-wrapper" style="flex: 1; width: 100%;">
+                        <img src="{{ \Illuminate\Support\Str::startsWith($story->image, 'http') ? $story->image : asset('images/' . ($story->image ?? 'alumni1.png')) }}" style="width: 100%; border-radius: 24px; box-shadow: 0 30px 60px rgba(0,0,0,0.1); height: 400px; object-fit: cover;">
                     </div>
-                    <div>
-                        <h4 style="font-size: 1.2rem; margin: 0;">{{ $featured_story->name }}</h4>
-                        <p style="color: #718096; margin: 0;">{{ $featured_story->designation }}</p>
+                    <div class="story-content-wrapper" style="flex: 1.2; width: 100%; text-align: left;">
+                        <p style="color: #0047ab; font-weight: 700; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 2px; margin-bottom: 1rem;">Success Story</p>
+                        <h2 style="font-size: 2.5rem; color: #061a3d; margin-bottom: 2rem;">Inspiration Across Batches</h2>
+                        <p style="font-size: 1.3rem; line-height: 1.6; font-style: italic; color: #4a5568; margin-bottom: 2.5rem; min-height: 120px;">"{{ $story->content ?? $story->story }}"</p>
+                        
+                        <div style="display: flex; align-items: center; gap: 20px;">
+                            <div style="width: 60px; height: 60px; background: #0047ab; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem;">
+                                <i class="fa-solid fa-user-graduate"></i>
+                            </div>
+                            <div>
+                                <h4 style="font-size: 1.2rem; margin: 0; color: #0f172a;">{{ $story->author ?? $story->name }}</h4>
+                                <p style="color: #718096; margin: 0; font-size: 0.9rem;">{{ $story->title ?? $story->designation }}</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
+                @endforeach
             </div>
+            
+            @if($featured_stories->count() > 1)
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 3rem; border-top: 1px solid #e2e8f0; padding-top: 1.5rem;">
+                <div class="slider-dots" style="margin-top: 0;">
+                    @foreach($featured_stories as $index => $story)
+                    <div class="slider-dot @if($index === 0) active @endif" data-slide="{{ $index }}" onclick="goToSlide({{ $index }})"></div>
+                    @endforeach
+                </div>
+                
+                <div class="slider-controls" style="margin-top: 0;">
+                    <button class="slider-btn" onclick="prevSlide()" aria-label="Previous story"><i class="fa-solid fa-arrow-left"></i></button>
+                    <button class="slider-btn" onclick="nextSlide()" aria-label="Next story"><i class="fa-solid fa-arrow-right"></i></button>
+                </div>
+            </div>
+            @endif
         </div>
     </section>
     @endif
@@ -472,5 +557,81 @@
             <p style="color: #a0aec0; font-size: 0.85rem; margin: 0;">Designed with excellence for the GEC Community.</p>
         </div>
     </footer>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.story-slide');
+        const dots = document.querySelectorAll('.slider-dot');
+        const totalSlides = slides.length;
+        let slideInterval = null;
+
+        function showSlide(index) {
+            if (totalSlides === 0) return;
+            
+            // Loop indices
+            if (index >= totalSlides) currentSlide = 0;
+            else if (index < 0) currentSlide = totalSlides - 1;
+            else currentSlide = index;
+
+            // Update DOM display & opacity transitions
+            slides.forEach((slide, i) => {
+                if (i === currentSlide) {
+                    slide.style.display = 'flex';
+                    // Delay slightly to trigger the CSS opacity transition nicely
+                    setTimeout(() => {
+                        slide.classList.add('active');
+                    }, 50);
+                } else {
+                    slide.classList.remove('active');
+                    slide.style.display = 'none';
+                }
+            });
+
+            // Update dot indicators
+            dots.forEach((dot, i) => {
+                if (i === currentSlide) {
+                    dot.classList.add('active');
+                } else {
+                    dot.classList.remove('active');
+                }
+            });
+        }
+
+        function nextSlide() {
+            showSlide(currentSlide + 1);
+            resetInterval();
+        }
+
+        function prevSlide() {
+            showSlide(currentSlide - 1);
+            resetInterval();
+        }
+
+        function goToSlide(index) {
+            showSlide(index);
+            resetInterval();
+        }
+
+        function startInterval() {
+            if (totalSlides > 1) {
+                slideInterval = setInterval(nextSlide, 3000); // Change story every 3 seconds
+            }
+        }
+
+        function resetInterval() {
+            if (slideInterval) {
+                clearInterval(slideInterval);
+                startInterval();
+            }
+        }
+
+        // Initialize Slider on DOM ready
+        document.addEventListener('DOMContentLoaded', () => {
+            if (totalSlides > 0) {
+                showSlide(0);
+                startInterval();
+            }
+        });
+    </script>
 </body>
 </html>

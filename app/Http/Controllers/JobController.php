@@ -58,7 +58,6 @@ class JobController extends Controller
         if ($request->hasFile('resume')) {
             $file = $request->file('resume');
             $filename = time() . '_' . Auth::id() . '_' . $file->getClientOriginalName();
-            // Store safely in local disk (not public) to protect PII
             $path = $file->storeAs('resumes', $filename);
 
             JobApplication::create([

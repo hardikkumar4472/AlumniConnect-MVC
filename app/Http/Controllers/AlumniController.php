@@ -25,10 +25,13 @@ class AlumniController extends Controller
             'donations_total' => Donation::sum('amount'),
         ];
 
-        $featured_story = SuccessStory::first();
+        $featured_stories = SuccessStory::where('is_featured', true)->get();
+        if ($featured_stories->isEmpty()) {
+            $featured_stories = SuccessStory::take(5)->get();
+        }
         $upcoming_events = AlumniEvent::orderBy('date', 'asc')->take(3)->get();
 
-        return view('landing', compact('stats', 'featured_story', 'upcoming_events'));
+        return view('landing', compact('stats', 'featured_stories', 'upcoming_events'));
     }
 
     public function dashboard()
